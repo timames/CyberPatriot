@@ -1,3 +1,12 @@
+# Start transcript to log all console output
+Start-Transcript -Path "C:\Program Files\HBA_HS_WIN\script_output.log" -Force
+
+# Displays an ASCII art banner with the script's branding for visual identification.
+# Purpose: Provides a cosmetic header to indicate the script's purpose and origin, enhancing user experience in CyberPatriot competitions.
+# Functionality: Uses Write-Host to output ASCII art and a title identifying the script as "HBA High School Windows Hardening Script".
+# CyberPatriot Relevance: Serves as a team identifier, though it does not contribute to scoring; purely aesthetic.
+# Considerations: No security impact; ensures readability in PowerShell console on Windows 10/11.
+function HBABanner {
     Write-Host '
 +========================================================+
 |   _   _ ____    _       ______   ______  _____ ____    |
@@ -14,16 +23,14 @@
 # Functionality: Uses New-Item to create the directory with -Force, overwriting if it exists.
 # CyberPatriot Relevance: Logging is critical for tracking changes and verifying actions during competitions.
 # Considerations: Requires admin privileges; may fail if UAC or antivirus restricts Program Files access on Windows 10/11.
-function createDir() {
-    Write-Host "About to run createDir. Commands include: New-Item -ItemType Directory -Path 'C:\Program Files\HBA_HS_WIN' -Force."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function createDir {
     Write-Host "Creating logging directory..." -ForegroundColor Gray
     try {
         New-Item -ItemType Directory -Path "C:\Program Files\HBA_HS_WIN" -Force
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\createDir.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error creating directory, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -32,9 +39,7 @@ function createDir() {
 # Functionality: Uses auditpol to enable auditing for categories like Account Logon, Object Access, and System events.
 # CyberPatriot Relevance: Auditing is often scored to ensure systems log unauthorized access or changes.
 # Considerations: Broad auditing may generate excessive logs, impacting performance on Windows 10/11; consider selective subcategories.
-function policyAudit() {
-    Write-Host "About to run policyAudit. Commands include: auditpol /set /category:'Account Logon' /success:enable and similar for other categories."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function policyAudit {
     Write-Host "Creating audit policies..." -ForegroundColor Gray
     try {
         auditpol /set /category:"Account Logon" /success:enable
@@ -58,7 +63,7 @@ function policyAudit() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\policyAudit.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error setting audit policies, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -67,9 +72,7 @@ function policyAudit() {
 # Functionality: Uses auditpol /resourceSACL to set auditing for Domain Admins (on servers) or Administrator (on clients).
 # CyberPatriot Relevance: Auditing privileged access is scored to detect unauthorized changes.
 # Considerations: Only relevant for servers in domain environments; client-side auditing may be excessive for Windows 10/11.
-function globalAudit() {
-    Write-Host "About to run globalAudit. Commands include: auditpol /resourceSACL /set /type:File /user:'Domain Admins' /success /failure /access:FW and similar."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function globalAudit {
     Write-Host "Adding global audit policies..." -ForegroundColor Gray
     try {
         $OSWMI = Get-CimInstance Win32_OperatingSystem -Property Caption,Version
@@ -84,7 +87,7 @@ function globalAudit() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\globalAudit.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error setting global audit policies, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -93,9 +96,7 @@ function globalAudit() {
 # Functionality: Disables SMBv1 server and client using Set-SmbServerConfiguration and Disable-WindowsOptionalFeature.
 # CyberPatriot Relevance: Disabling SMBv1 is a common scoring criterion due to its known vulnerabilities.
 # Considerations: SMBv1 is disabled by default in Windows 10/11, but checking ensures no regressions; may break legacy apps.
-function smbShare() {
-    Write-Host "About to run smbShare. Commands include: Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force and Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function smbShare {
     Write-Host "Disabling SMBv1..." -ForegroundColor Gray
     try {
         If ((Get-SmbServerConfiguration).EnableSMB1Protocol) { 
@@ -107,7 +108,7 @@ function smbShare() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\smbShare.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling SMBv1, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -116,9 +117,7 @@ function smbShare() {
 # Functionality: Enables SMBv2/3 using Set-SmbServerConfiguration and Enable-WindowsOptionalFeature.
 # CyberPatriot Relevance: Ensures secure file sharing configurations, though often redundant in Windows 10/11.
 # Considerations: SMBv2/3 is default in Windows 10/11; function is precautionary but may be unnecessary.
-function smbGood() {
-    Write-Host "About to run smbGood. Commands include: Set-SmbServerConfiguration -EnableSMB2Protocol $true -Force and Enable-WindowsOptionalFeature -Online -FeatureName smb2protocol."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function smbGood {
     Write-Host "Ensuring SMBv2/3 is enabled..." -ForegroundColor Gray
     try {
         If ((Get-SmbServerConfiguration).EnableSMB1Protocol) { 
@@ -130,7 +129,7 @@ function smbGood() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\smbGood.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error enabling SMBv2/3, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -139,9 +138,7 @@ function smbGood() {
 # Functionality: Uses Set-PolicyFileEntry to set registry-based policies (e.g., disable Messenger, IIS, enable updates).
 # CyberPatriot Relevance: Aligns with competition requirements to enforce secure policies.
 # Considerations: Requires PolicyFileEditor module; some settings (e.g., Messenger) are deprecated in Windows 10/11.
-function groupPolicy() {
-    Write-Host "About to run groupPolicy. Commands include: Set-PolicyFileEntry for various keys like SOFTWARE\Policies\Microsoft\Messenger\Client\PreventAutoRun."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function groupPolicy {
     Write-Host "Creating Group Policies..." -ForegroundColor Gray
     try {
         Set-PolicyFileEntry -Path $env:systemroot\system32\GroupPolicy\Machine\registry.pol -Key "SOFTWARE\Policies\Microsoft\Messenger\Client" -ValueName PreventAutoRun -Type DWord -Data 1
@@ -151,7 +148,7 @@ function groupPolicy() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\groupPolicy.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error setting group policies, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -160,9 +157,7 @@ function groupPolicy() {
 # Functionality: Uses dism to disable TelnetClient and TelnetServer features.
 # CyberPatriot Relevance: Disabling insecure protocols is a common scoring task.
 # Considerations: Telnet is rarely used in Windows 10/11; function is precautionary but may error if features are absent.
-function telnetEnable() {
-    Write-Host "About to run telnetEnable. Commands include: dism /online /Disable-feature /featurename:TelnetClient /NoRestart and for TelnetServer."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function telnetEnable {
     Write-Host "Disabling telnet..." -ForegroundColor Gray
     try {
         dism /online /Disable-feature /featurename:TelnetClient /NoRestart
@@ -170,7 +165,7 @@ function telnetEnable() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\telnetEnable.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling telnet, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -179,9 +174,7 @@ function telnetEnable() {
 # Functionality: Uses netsh advfirewall to block TCP outbound connections for 40+ executables.
 # CyberPatriot Relevance: Blocking LOLBins aligns with securing systems against exploitation.
 # Considerations: May block legitimate tools (e.g., msiexec); only covers TCP, not UDP; applicable to Windows 10/11.
-function hostFirewall() {
-    Write-Host "About to run hostFirewall. Commands include: netsh advfirewall firewall add rule for blocking various executables like calc.exe, certutil.exe, etc."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function hostFirewall {
     Write-Host "Configuring firewall rules..." -ForegroundColor Gray
     try {
         netsh advfirewall firewall add rule name="Block appvlp.exe netconns" program="C:\Program Files (x86)\Microsoft Office\root\client\AppVLP.exe" protocol=tcp dir=out enable=yes action=block profile=any
@@ -240,7 +233,7 @@ function hostFirewall() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\hostFirewall.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error configuring firewall rules, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -249,9 +242,7 @@ function hostFirewall() {
 # Functionality: Uses Disable-PSRemoting, sets trusted hosts to *, and configures PowerShell session security.
 # CyberPatriot Relevance: Disabling unnecessary remote access is scored to secure systems.
 # Considerations: Trusted hosts set to * is insecure; consider admin tools in Windows 10/11 if needed.
-function winRM() {
-    Write-Host "About to run winRM. Commands include: Disable-PSRemoting -Force, Set-Item wsman:\localhost\client\trustedhosts * -Force, Set-PSSessionConfiguration."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function winRM {
     Write-Host "Disabling WinRM..." -ForegroundColor Gray
     try {
         Disable-PSRemoting -Force
@@ -260,7 +251,7 @@ function winRM() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\winRM.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling WinRM, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -269,9 +260,7 @@ function winRM() {
 # Functionality: Sets DenyUnauthenticatedBind on AD object; skips on non-server systems.
 # CyberPatriot Relevance: Securing AD configurations is scored in server-based VMs.
 # Considerations: Requires ActiveDirectory module; irrelevant for Windows 10/11 client VMs.
-function anonLdap() {
-    Write-Host "About to run anonLdap. Commands include: Get-ADRootDSE, Set-ADObject -Identity $ObjectPath -Add @{ 'msDS-Other-Settings' = 'DenyUnauthenticatedBind=1' }."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function anonLdap {
     Write-Host "Disabling anonymous LDAP..." -ForegroundColor Gray
     try {
         $OSWMI = (Get-CimInstance Win32_OperatingSystem).Caption
@@ -285,7 +274,7 @@ function anonLdap() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\anonLdap.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling anonymous LDAP, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -294,9 +283,7 @@ function anonLdap() {
 # Functionality: Enables real-time monitoring and sets specific ASR rules to block malicious behaviors.
 # CyberPatriot Relevance: Enabling Defender and ASR is scored for robust malware defense; fulfills Action Center monitoring.
 # Considerations: ASR rules may cause false positives in Windows 10/11; test in audit mode first.
-function defenderConfig() {
-    Write-Host "About to run defenderConfig. Commands include: Set-MpPreference -EnableRealtimeMonitoring $true, Add-MpPreference for various ASR rules IDs."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function defenderConfig {
     Write-Host "Configuring Windows Defender..." -ForegroundColor Gray
     try {
         Set-MpPreference -EnableRealtimeMonitoring $true
@@ -312,7 +299,7 @@ function defenderConfig() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\defenderConfig.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error configuring Windows Defender, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -321,9 +308,7 @@ function defenderConfig() {
 # Functionality: Uses reg add to set 50+ keys, including enabling updates, disabling autorun, and securing macros.
 # CyberPatriot Relevance: Registry hardening is scored for securing system behavior and preventing exploits.
 # Considerations: Some settings (e.g., Office 2016-specific) may be outdated in Windows 11; risks breaking apps if not tested.
-function registryKeys() {
-    Write-Host "About to run registryKeys. Commands include: reg add for various keys like HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU /v AutoInstallMinorUpdates /t REG_DWORD /d 1 /f and many others."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function registryKeys {
     Write-Host "Configuring registry keys..." -ForegroundColor Gray
     try {
         reg add HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU /v AutoInstallMinorUpdates /t REG_DWORD /d 1 /f
@@ -382,7 +367,7 @@ function registryKeys() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\registryKeys.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error configuring registry keys, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -391,9 +376,7 @@ function registryKeys() {
 # Functionality: Uses net user to create the account with a hardcoded base64-encoded password.
 # CyberPatriot Relevance: Creating a secure admin account is scored to replace vulnerable defaults.
 # Considerations: Hardcoded password is insecure; consider randomizing. Consider only on Windows 10/11.
-function techAccount() {
-    Write-Host "About to run techAccount. Commands include: net user $Username $passwordplaintext /add /y, net localgroup Administrators $Username /add."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function techAccount {
     Write-Host "Configuring tech account..." -ForegroundColor Gray
     try {
         $OS = (Get-CimInstance Win32_OperatingSystem).Caption
@@ -409,7 +392,7 @@ function techAccount() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\techAccount.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error configuring tech account, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -418,16 +401,14 @@ function techAccount() {
 # Functionality: Uses Disable-PSRemoting to turn off PowerShell remoting.
 # CyberPatriot Relevance: Redundant but ensures no remote access vulnerabilities.
 # Considerations: May break admin tools in Windows 10/11; overlaps with winRM function.
-function miscellaneousStuff() {
-    Write-Host "About to run miscellaneousStuff. Commands include: Disable-PSRemoting -Force."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function miscellaneousStuff {
     Write-Host "Configuring miscellaneous items..." -ForegroundColor Gray
     try {
         Disable-PSRemoting -Force
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\miscellaneousStuff.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error configuring miscellaneous items, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -436,9 +417,7 @@ function miscellaneousStuff() {
 # Functionality: Sets provided passwords for admins (except ashepard), generates random for users, exports to CSV.
 # CyberPatriot Relevance: Strong passwords are scored to secure accounts; skips auto-login user.
 # Considerations: Plaintext CSV export is insecure; risks locking out users/services in Windows 10/11.
-function localPass(){
-    Write-Host "About to run localPass. Commands include: Get-LocalUser, Set-LocalUser -Password, Export-Csv for passwords."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function localPass {
     Write-Host "Changing local passwords..." -ForegroundColor Gray
     try {
         $adminPasswords = @{
@@ -477,7 +456,7 @@ function localPass(){
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\localPass.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error changing local passwords, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -486,9 +465,7 @@ function localPass(){
 # Functionality: Uses net user to delete "Administrator" and create "Wasabi" with admin privileges.
 # CyberPatriot Relevance: Renaming default accounts is scored to reduce attack vectors.
 # Considerations: Hardcoded "Wasabi" is predictable; risks breaking services relying on Administrator in Windows 10/11.
-function adminChange(){
-    Write-Host "About to run adminChange. Commands include: net user $adminName /delete, net user $newAdminname /add /active:yes, net localgroup Administrators $newAdminname /add."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function adminChange {
     Write-Host "Changing Administrators name..." -ForegroundColor Gray
     try {
         $adminName = "Administrator"
@@ -499,7 +476,7 @@ function adminChange(){
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\adminChange.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error changing administrator name, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -508,9 +485,7 @@ function adminChange(){
 # Functionality: Uses Get-LocalUser to delete accounts not in authorized list; logs to CSV.
 # CyberPatriot Relevance: Removing unauthorized users is a key scoring task.
 # Considerations: Uses README authorized list; risks deleting legitimate accounts if not accurate.
-function removeUnauthorizedUsers() {
-    Write-Host "About to run removeUnauthorizedUsers. Commands include: Get-LocalUser, Remove-LocalUser for non-authorized users, Export-Csv for audit."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function removeUnauthorizedUsers {
     Write-Host "Removing unauthorized users..." -ForegroundColor Gray
     try {
         $authorizedAdmins = @("ashepard", "ygagarin", "vkomarov", "jglenn", "vtereshkova", "gcooper")
@@ -523,7 +498,7 @@ function removeUnauthorizedUsers() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\removeUnauthorizedUsers.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error removing unauthorized users, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -532,9 +507,7 @@ function removeUnauthorizedUsers() {
 # Functionality: Sets AutoAdminLogon to 0 and removes DefaultUserName/Password registry keys.
 # CyberPatriot Relevance: Disabling auto-logon is scored to secure login processes.
 # Considerations: Safe for Windows 10/11; no significant risks if properly implemented.
-function disableAutoLogon() {
-    Write-Host "About to run disableAutoLogon. Commands include: Set-ItemProperty for AutoAdminLogon, Remove-ItemProperty for DefaultUserName and DefaultPassword."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function disableAutoLogon {
     Write-Host "Disabling auto-logon..." -ForegroundColor Gray
     try {
         Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -Value 0
@@ -543,7 +516,7 @@ function disableAutoLogon() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\disableAutoLogon.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling auto-logon, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -552,9 +525,7 @@ function disableAutoLogon() {
 # Functionality: Uses Get-ScheduledTask to log and remove tasks not in \Microsoft* path.
 # CyberPatriot Relevance: Removing malicious tasks is a common scoring task.
 # Considerations: Filter is broad; customize per README to avoid deleting legitimate tasks in Windows 10/11.
-function removeMaliciousTasks() {
-    Write-Host "About to run removeMaliciousTasks. Commands include: Get-ScheduledTask, Unregister-ScheduledTask for non-Microsoft tasks, Export-Csv for audit."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function removeMaliciousTasks {
     Write-Host "Removing malicious scheduled tasks..." -ForegroundColor Gray
     try {
         Get-ScheduledTask | Export-Csv -Path "C:\Program Files\HBA_HS_WIN\tasks_audit.csv" -NoTypeInformation
@@ -562,7 +533,7 @@ function removeMaliciousTasks() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\removeMaliciousTasks.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error removing malicious tasks, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -571,9 +542,7 @@ function removeMaliciousTasks() {
 # Functionality: Uses Get-WmiObject Win32_Product to uninstall non-allowed software; logs to CSV.
 # CyberPatriot Relevance: Removing unauthorized software is scored to secure VMs.
 # Considerations: Whitelist includes README software; risks uninstalling legitimate apps if not complete.
-function removeUnauthorizedSoftware() {
-    Write-Host "About to run removeUnauthorizedSoftware. Commands include: Get-WmiObject -Class Win32_Product, $_.Uninstall() for non-allowed software, Export-Csv for audit."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function removeUnauthorizedSoftware {
     Write-Host "Removing unauthorized software..." -ForegroundColor Gray
     try {
         $allowedSoftware = @("Microsoft Windows Operating System", "Mozilla Firefox", "Mozilla Thunderbird")
@@ -582,7 +551,7 @@ function removeUnauthorizedSoftware() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\removeUnauthorizedSoftware.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error removing unauthorized software, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -591,16 +560,14 @@ function removeUnauthorizedSoftware() {
 # Functionality: Uses icacls to set strict permissions for Administrators, SYSTEM, and Users.
 # CyberPatriot Relevance: Securing file permissions is scored to protect system integrity.
 # Considerations: Safe for Windows 10/11; additional directories may need securing based on README.
-function secureFilePermissions() {
-    Write-Host "About to run secureFilePermissions. Commands include: icacls 'C:\Windows' /inheritance:d /grant:r 'Administrators:(OI)(F)' 'SYSTEM:(OI)(F)' 'Users:(OI)(RX)'."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function secureFilePermissions {
     Write-Host "Securing file and folder permissions..." -ForegroundColor Gray
     try {
         icacls "C:\Windows" /inheritance:d /grant:r "Administrators:(OI)(F)" "SYSTEM:(OI)(F)" "Users:(OI)(RX)"
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\secureFilePermissions.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error securing file permissions, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -609,9 +576,7 @@ function secureFilePermissions() {
 # Functionality: Uses Get-ChildItem to scan C:\Users and remove specified file types; logs to CSV.
 # CyberPatriot Relevance: Removing malicious/media/hacking files is a key scoring task in competitions.
 # Considerations: Aggressive; risks deleting legitimate files in Windows 10/11; extensions include media and tools.
-function removeMaliciousFiles() {
-    Write-Host "About to run removeMaliciousFiles. Commands include: Get-ChildItem -Path C:\Users -Recurse -Include *.exe,*.bat,*.vbs,*.mp3,*.mp4,*.jpg,*.png | Remove-Item -Force, Export-Csv for audit."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function removeMaliciousFiles {
     Write-Host "Removing malicious and non-work files..." -ForegroundColor Gray
     try {
         Get-ChildItem -Path C:\Users -Recurse -Include *.exe,*.bat,*.vbs,*.mp3,*.mp4,*.avi,*.wmv,*.jpg,*.png,*.gif,*.bmp -ErrorAction SilentlyContinue | Remove-Item -Force
@@ -619,7 +584,7 @@ function removeMaliciousFiles() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\removeMaliciousFiles.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error removing malicious files, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -628,16 +593,14 @@ function removeMaliciousFiles() {
 # Functionality: Sets fDenyTSConnections registry key to 1.
 # CyberPatriot Relevance: Disabling RDP is scored unless README specifies it’s needed.
 # Considerations: Safe for Windows 10/11; verify RDP isn’t required for competition scenarios.
-function disableRDP() {
-    Write-Host "About to run disableRDP. Commands include: Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 1."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function disableRDP {
     Write-Host "Disabling Remote Desktop..." -ForegroundColor Gray
     try {
         Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 1
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\disableRDP.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling RDP, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -646,9 +609,7 @@ function disableRDP() {
 # Functionality: Uses Get-SmbShare to log and remove shares not in whitelist (ADMIN$, C$, IPC$).
 # CyberPatriot Relevance: Securing shares is scored to prevent unauthorized access.
 # Considerations: Whitelist is standard; risks removing legitimate shares in Windows 10/11 if not customized.
-function secureNetworkShares() {
-    Write-Host "About to run secureNetworkShares. Commands include: Get-SmbShare, Remove-SmbShare -Force for non-whitelisted shares, Export-Csv for audit."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function secureNetworkShares {
     Write-Host "Securing network shares..." -ForegroundColor Gray
     try {
         Get-SmbShare | Export-Csv -Path "C:\Program Files\HBA_HS_WIN\shares_audit.csv" -NoTypeInformation
@@ -656,7 +617,7 @@ function secureNetworkShares() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\secureNetworkShares.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error securing network shares, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -665,9 +626,7 @@ function secureNetworkShares() {
 # Functionality: Sets registry keys to disable AutofillCreditCardEnabled and JavaScriptAllowed.
 # CyberPatriot Relevance: Securing browsers is scored to mitigate web-based attacks.
 # Considerations: Edge-specific; may need additional settings for other browsers in Windows 10/11.
-function secureBrowserSettings() {
-    Write-Host "About to run secureBrowserSettings. Commands include: reg add for HKLM\SOFTWARE\Policies\Microsoft\Edge keys like AutofillCreditCardEnabled."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function secureBrowserSettings {
     Write-Host "Securing browser settings..." -ForegroundColor Gray
     try {
         reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v "AutofillCreditCardEnabled" /t REG_DWORD /d 0 /f
@@ -675,7 +634,7 @@ function secureBrowserSettings() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\secureBrowserSettings.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error securing browser settings, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -684,9 +643,7 @@ function secureBrowserSettings() {
 # Functionality: Uses Get-WmiObject and file checks to detect; uses winget to install/upgrade Firefox and Thunderbird; logs to CSV.
 # CyberPatriot Relevance: Updating software is a critical scoring task to secure VMs.
 # Considerations: Requires winget for Firefox/Thunderbird (Windows 10 1709+/11); Edge updates via Windows Update; manual if winget absent.
-function updateBrowsers() {
-    Write-Host "About to run updateBrowsers. Commands include: Get-WmiObject -Class Win32_Product for detection, winget upgrade --id Mozilla.Firefox, winget install/upgrade Mozilla.Thunderbird, Export-Csv for audit."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function updateBrowsers {
     Write-Host "Checking and updating web browsers and Thunderbird..." -ForegroundColor Gray
     try {
         $browserList = @()
@@ -754,7 +711,7 @@ function updateBrowsers() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\browserUpdates.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error updating browsers, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -763,9 +720,7 @@ function updateBrowsers() {
 # Functionality: Uses PSWindowsUpdate to install security updates only.
 # CyberPatriot Relevance: Applying updates is a critical scoring task.
 # Considerations: Requires PSWindowsUpdate module; limits to security to comply with README; may need internet.
-function applyUpdates() {
-    Write-Host "About to run applyUpdates. Commands include: Get-WUInstall -Category 'Security' -AcceptAll -AutoReboot (assuming PSWindowsUpdate module)."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function applyUpdates {
     Write-Host "Applying security updates..." -ForegroundColor Gray
     try {
         # Requires PSWindowsUpdate module; install if needed (manual step)
@@ -774,7 +729,7 @@ function applyUpdates() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\applyUpdates.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error applying updates, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -783,9 +738,7 @@ function applyUpdates() {
 # Functionality: Uses Set-Service and Stop-Service to disable specified services.
 # CyberPatriot Relevance: Disabling unnecessary services is scored to secure VMs.
 # Considerations: Excludes CCS Client; customize list per README to avoid breaking required services.
-function disableUnnecessaryServices() {
-    Write-Host "About to run disableUnnecessaryServices. Commands include: Set-Service -Name $service -StartupType Disabled, Stop-Service -Name $service -Force for each service in list."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function disableUnnecessaryServices {
     Write-Host "Disabling unnecessary services..." -ForegroundColor Gray
     try {
         $servicesToDisable = @("Spooler", "Bluetooth Support Service", "Xbox Live Auth Manager")  # Exclude CCS Client
@@ -796,7 +749,7 @@ function disableUnnecessaryServices() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\disableUnnecessaryServices.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling unnecessary services, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -805,16 +758,14 @@ function disableUnnecessaryServices() {
 # Functionality: Uses Set-ExecutionPolicy to enforce Restricted policy.
 # CyberPatriot Relevance: Securing PowerShell is scored to prevent malicious scripts.
 # Considerations: May interfere with legitimate scripts in Windows 10/11; verify requirements.
-function securePowerShellPolicy() {
-    Write-Host "About to run securePowerShellPolicy. Commands include: Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy Restricted -Force."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function securePowerShellPolicy {
     Write-Host "Securing PowerShell execution policy..." -ForegroundColor Gray
     try {
         Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy Restricted -Force
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\securePowerShellPolicy.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error securing PowerShell policy, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -823,9 +774,7 @@ function securePowerShellPolicy() {
 # Functionality: Uses Get-ItemProperty to log and Remove-ItemProperty to delete Run keys.
 # CyberPatriot Relevance: Removing malicious registry entries is scored.
 # Considerations: Aggressive; risks removing legitimate entries in Windows 10/11; customize whitelist.
-function removeUnauthorizedRegistry() {
-    Write-Host "About to run removeUnauthorizedRegistry. Commands include: Get-ItemProperty for Run key audit, Remove-ItemProperty for Run keys."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function removeUnauthorizedRegistry {
     Write-Host "Removing unauthorized registry entries..." -ForegroundColor Gray
     try {
         Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" | Export-Csv -Path "C:\Program Files\HBA_HS_WIN\registry_run_audit.csv" -NoTypeInformation
@@ -833,7 +782,7 @@ function removeUnauthorizedRegistry() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\removeUnauthorizedRegistry.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error removing unauthorized registry entries, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -842,9 +791,7 @@ function removeUnauthorizedRegistry() {
 # Functionality: Uses Confirm-SecureBootUEFI; logs if disabled.
 # CyberPatriot Relevance: Secure Boot is scored for modern Windows systems.
 # Considerations: Cannot enable via script; requires BIOS changes in Windows 10/11.
-function enableSecureBoot() {
-    Write-Host "About to run enableSecureBoot. Commands include: Confirm-SecureBootUEFI, Out-File if disabled."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function enableSecureBoot {
     Write-Host "Checking Secure Boot status..." -ForegroundColor Gray
     try {
         if (-not (Confirm-SecureBootUEFI)) {
@@ -853,7 +800,9 @@ function enableSecureBoot() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\enableSecureBoot.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error checking……
+
+System: Secure Boot status, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -862,16 +811,14 @@ function enableSecureBoot() {
 # Functionality: Uses net user to disable the Guest account.
 # CyberPatriot Relevance: Disabling Guest logins is a common scoring task.
 # Considerations: Safe for Windows 10/11; no significant risks.
-function disableGuestLogins() {
-    Write-Host "About to run disableGuestLogins. Commands include: net user Guest /active:no."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function disableGuestLogins {
     Write-Host "Disabling Guest account logins..." -ForegroundColor Gray
     try {
         net user Guest /active:no
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\disableGuestLogins.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error disabling Guest logins, logged to file" -ForegroundColor DarkYellow
     }
 }
 
@@ -880,9 +827,7 @@ function disableGuestLogins() {
 # Functionality: Uses Get-TimeZone and Set-TimeZone.
 # CyberPatriot Relevance: Maintains competition guidelines for time zone.
 # Considerations: README instructs not to change if set; this checks first.
-function ensureUtcTimeZone() {
-    Write-Host "About to run ensureUtcTimeZone. Commands include: Get-TimeZone, Set-TimeZone -Id 'UTC' if not set."
-    if ((Read-Host "Proceed? (Y/N)") -ne "Y") { return }
+function ensureUtcTimeZone {
     Write-Host "Ensuring UTC time zone..." -ForegroundColor Gray
     try {
         if ((Get-TimeZone).Id -ne "UTC") {
@@ -891,11 +836,85 @@ function ensureUtcTimeZone() {
     }
     catch {
         Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\ensureUtcTimeZone.txt"
-        Write-Host "Writing error to file" -ForegroundColor DarkYellow
+        Write-Host "Error ensuring UTC time zone, logged to file" -ForegroundColor DarkYellow
     }
 }
 
 # Sets the membership of the "voyagers" group per README.
 # Purpose: Configures group membership to specified users.
 # Functionality: Removes current members and adds specified users.
-# CyberPatriot Relevance: Aligns with README audit requirements for
+# CyberPatriot Relevance: Aligns with README audit requirements for group membership.
+# Considerations: Assumes group exists; creates if not (optional).
+function setVoyagersGroup {
+    Write-Host "Setting voyagers group membership..." -ForegroundColor Gray
+    try {
+        $groupName = "voyagers"
+        $members = @("gcooper", "scar", "zazu", "sarafina")
+        if (-not (Get-LocalGroup -Name $groupName -ErrorAction SilentlyContinue)) {
+            New-LocalGroup -Name $groupName
+        }
+        Get-LocalGroupMember -Group $groupName | ForEach-Object { Remove-LocalGroupMember -Group $groupName -Member $_.Name -ErrorAction SilentlyContinue }
+        foreach ($member in $members) {
+            Add-LocalGroupMember -Group $groupName -Member $member -ErrorAction SilentlyContinue
+        }
+    }
+    catch {
+        Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\setVoyagersGroup.txt"
+        Write-Host "Error setting voyagers group, logged to file" -ForegroundColor DarkYellow
+    }
+}
+
+# Ensures all authorized users from README exist.
+# Purpose: Creates missing authorized users (admins and users).
+# Functionality: Uses New-LocalUser if missing; passwords set in localPass.
+# CyberPatriot Relevance: Ensures only authorized accounts exist per README.
+# Considerations: Creates with no password initially; set later.
+function ensureAuthorizedUsers {
+    Write-Host "Ensuring authorized users exist..." -ForegroundColor Gray
+    try {
+        $authorizedAdmins = @("ashepard", "ygagarin", "vkomarov", "jglenn", "vtereshkova", "gcooper")
+        $authorizedUsers = @("timon", "zazu", "ed", "banzai", "scar", "rafiki", "nala", "shenzi", "sarabi", "pumbaa", "sarafina", "gauri", "bruno", "demitri", "erik", "vasca", "veles", "damir", "gopher", "gleb")
+        $allAuthorized = $authorizedAdmins + $authorizedUsers
+        foreach ($user in $allAuthorized) {
+            if (-not (Get-LocalUser -Name $user -ErrorAction SilentlyContinue)) {
+                New-LocalUser -Name $user -NoPassword
+            }
+        }
+    }
+    catch {
+        Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\ensureAuthorizedUsers.txt"
+        Write-Host "Error ensuring authorized users, logged to file" -ForegroundColor DarkYellow
+    }
+}
+
+# Ensures authorized admins are in the Administrators group.
+# Purpose: Adds README admins to Administrators group.
+# Functionality: Uses Add-LocalGroupMember.
+# CyberPatriot Relevance: Ensures proper admin privileges per README.
+# Considerations: Silent if already member.
+function ensureAdmins {
+    Write-Host "Ensuring authorized admins in group..." -ForegroundColor Gray
+    try {
+        $authorizedAdmins = @("ashepard", "ygagarin", "vkomarov", "jglenn", "vtereshkova", "gcooper")
+        foreach ($admin in $authorizedAdmins) {
+            Add-LocalGroupMember -Group "Administrators" -Member $admin -ErrorAction SilentlyContinue
+        }
+    }
+    catch {
+        Write-Output "$Error[0] $_" | Out-File "C:\Program Files\HBA_HS_WIN\ensureAdmins.txt"
+        Write-Host "Error ensuring admins, logged to file" -ForegroundColor DarkYellow
+    }
+}
+
+# Sets Firefox as the default browser per README.
+# Purpose: Configures Firefox as default using MDM policy.
+# Functionality: Uses CIM to set default associations via base64 XML.
+# CyberPatriot Relevance: Aligns with README requirement for default browser.
+# Considerations: Requires Firefox installed; works on Pro/Enterprise editions.
+function SetDefaultBrowserToFirefox {
+    Write-Host "Setting Firefox as default browser..." -ForegroundColor Gray
+    try {
+        $namespaceName = "root\cimv2\mdm\dmmap"
+        $className = "MDM_Policy_Config01_ApplicationDefaults02"
+        $obj = Get-CimInstance -Namespace $namespaceName -ClassName $className -Filter "ParentID='./Vendor/MSFT/Policy/Config' and InstanceID='ApplicationDefaults'" -ErrorAction SilentlyContinue
+        $base64XML = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPERlZmF1bHRBc3NvY2lhdGlvbnM+CiAgPEFzc29jaWF0aW9uIElkZW50aWZpZXI9Ii5odG0iIFByb2dJZD0iRmlyZWZveEhUTUwiIEFwcGxpY2F0aW9uTmFtZT0iTW96aWxsYSBGaXJlZm94IiAvPgogIDxBc3NvY2lhdGlvbiBJZGVudGlmaWVyPSIuaHRtbCIgUHJvZ0lkPSJGaXJlZm94SFRNTCIgQXBwbGljYXRpb25OYW1lPSJNb3ppbGxhIEZpcmVmb3giIC8+CiAgPEFzc29jaWF0aW9
