@@ -193,6 +193,10 @@
             display: block;
             white-space: pre-wrap;
             word-break: break-all;
+            user-select: all;
+            -webkit-user-select: all;
+            -moz-user-select: all;
+            -ms-user-select: all;
         }
 
         .checklist {
@@ -337,6 +341,191 @@
             font-size: 1.1em;
         }
 
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 10px;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header .school-name {
+                font-size: 1.3rem;
+                letter-spacing: 1px;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 0.85rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+                padding: 0;
+            }
+
+            .tab-button {
+                padding: 15px 20px;
+                border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+                font-size: 1rem;
+            }
+
+            .tab-button.active::after {
+                bottom: 0;
+                height: 2px;
+                left: 0;
+                right: 0;
+            }
+
+            .tab-content {
+                padding: 15px;
+            }
+
+            .section {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .section h2 {
+                font-size: 1.2rem;
+            }
+
+            .command {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            .command-code {
+                font-size: 0.85rem;
+                word-break: break-word;
+            }
+
+            .search-box {
+                padding: 15px;
+            }
+
+            .search-box input {
+                padding: 10px 15px;
+                font-size: 0.95rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-ref {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .quick-ref code {
+                font-size: 0.8rem;
+            }
+
+            .checklist {
+                padding: 15px;
+            }
+
+            .checklist li {
+                font-size: 0.9rem;
+            }
+
+            .footer {
+                padding: 20px 15px;
+            }
+
+            .footer h3 {
+                font-size: 1.1rem;
+            }
+
+            .footer p, .footer .motto {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .school-name {
+                font-size: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .tab-button {
+                font-size: 0.9rem;
+                padding: 12px 15px;
+            }
+
+            .section h2 {
+                font-size: 1rem;
+            }
+
+            .command-code {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Search Results Styling */
+        .search-box {
+            position: relative;
+        }
+
+        .search-results-info {
+            color: #FFD700;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Scroll to Top Button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #FFD700;
+            color: #001f3f;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+        }
+
+        .scroll-to-top:hover {
+            background: #ffc400;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+        }
+
+        .scroll-to-top.visible {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+        }
+
         @media print {
             body {
                 background: white;
@@ -369,6 +558,7 @@
         <div id="windows" class="tab-content active">
             <div class="search-box">
                 <input type="text" id="searchWindows" placeholder="🔍 Search Windows commands..." onkeyup="searchCommands('windows')">
+                <div id="searchResultsWindows" class="search-results-info"></div>
             </div>
 
             <div class="quick-ref">
@@ -1346,6 +1536,7 @@ Get-ChildItem -Path C:\Users\ -Hidden -Recurse</span>
         <div id="linux" class="tab-content">
             <div class="search-box">
                 <input type="text" id="searchLinux" placeholder="🔍 Search Linux commands..." onkeyup="searchCommands('linux')">
+                <div id="searchResultsLinux" class="search-results-info"></div>
             </div>
 
             <div class="quick-ref">
@@ -2027,6 +2218,7 @@ sudo chmod 640 /etc/gshadow</span>
         <div id="cisco" class="tab-content">
             <div class="search-box">
                 <input type="text" id="searchCisco" placeholder="🔍 Search Cisco commands..." onkeyup="searchCommands('cisco')">
+                <div id="searchResultsCisco" class="search-results-info"></div>
             </div>
 
             <div class="quick-ref">
@@ -2531,11 +2723,14 @@ traceroute 192.168.1.1</span>
 
         <div class="footer">
             <h3>🛡️ Hawaii Baptist Academy CyberPatriot Team 🛡️</h3>
-            <p><strong>Location:</strong> Pearl City, Hawaii</p>
+            <p><strong>Location:</strong> Honolulu, Hawaii</p>
             <p>Defending Networks • Building Character • Serving Christ</p>
             <div class="motto">"Be strong and courageous." - Joshua 1:9</div>
         </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-to-top" id="scrollToTopBtn" onclick="scrollToTop()" title="Scroll to top">↑</button>
 
     <script>
         function openTab(tabName) {
@@ -2554,6 +2749,28 @@ traceroute 192.168.1.1</span>
             // Show the selected tab and mark button as active
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
+
+            // Clear search when switching tabs
+            const searchInputs = ['searchWindows', 'searchLinux', 'searchCisco'];
+            searchInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.value = '';
+                }
+            });
+
+            // Show all sections in the new tab
+            const newTab = document.getElementById(tabName);
+            const sections = newTab.getElementsByClassName('section');
+            for (let i = 0; i < sections.length; i++) {
+                sections[i].style.display = '';
+            }
+
+            // Clear result info
+            const resultsInfos = document.getElementsByClassName('search-results-info');
+            for (let i = 0; i < resultsInfos.length; i++) {
+                resultsInfos[i].textContent = '';
+            }
         }
 
         function searchCommands(tab) {
@@ -2561,19 +2778,53 @@ traceroute 192.168.1.1</span>
             const filter = searchInput.value.toLowerCase();
             const tabContent = document.getElementById(tab);
             const sections = tabContent.getElementsByClassName('section');
+            const resultsDiv = document.getElementById('searchResults' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            
+            let visibleCount = 0;
+            let totalCount = sections.length;
 
             for (let i = 0; i < sections.length; i++) {
                 const section = sections[i];
                 const keywords = section.getAttribute('data-keywords') || '';
                 const textContent = section.textContent || section.innerText;
                 
-                if (textContent.toLowerCase().indexOf(filter) > -1 || keywords.toLowerCase().indexOf(filter) > -1) {
+                if (filter === '' || textContent.toLowerCase().indexOf(filter) > -1 || keywords.toLowerCase().indexOf(filter) > -1) {
                     section.style.display = '';
+                    visibleCount++;
                 } else {
                     section.style.display = 'none';
                 }
             }
+
+            // Update search results info
+            if (filter === '') {
+                resultsDiv.textContent = '';
+            } else if (visibleCount === 0) {
+                resultsDiv.textContent = '❌ No results found';
+                resultsDiv.style.color = '#ff6b6b';
+            } else {
+                resultsDiv.textContent = `✅ Showing ${visibleCount} of ${totalCount} sections`;
+                resultsDiv.style.color = '#FFD700';
+            }
         }
+
+        // Scroll to top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide scroll to top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scrollToTopBtn');
+            if (window.pageYOffset > 300) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+        });
     </script>
 </body>
 </html>
