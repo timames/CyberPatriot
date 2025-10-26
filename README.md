@@ -23,7 +23,7 @@ This repository contains a comprehensive **Competition Reference Guide** for the
 
 ### 🏫 About Hawaii Baptist Academy
 
-**Location**: Pearl City, Hawaii  
+**Location**: Honolulu, Hawaii  
 **Mission**: Defending Networks • Building Character • Serving Christ  
 **Motto**: *"Be strong and courageous."* - Joshua 1:9
 
@@ -375,7 +375,7 @@ CyberPatriot/
 
 ### Hawaii Baptist Academy CyberPatriot Team
 
-- **Location**: Pearl City, Hawaii
+- **Location**: Honolulu, Hawaii
 - **GitHub**: [timames/CyberPatriot](https://github.com/timames/CyberPatriot)
 
 ### Getting Help
