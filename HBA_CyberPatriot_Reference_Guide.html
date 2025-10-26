@@ -1,0 +1,2579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBA CyberPatriot - Competition Reference Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(15, 18, 25, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #001f3f 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 4px solid #FFD700;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #FFD700;
+        }
+
+        .header h1 {
+            color: #FFD700;
+            font-size: 2.5em;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .header .school-name {
+            color: #FFD700;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+
+        .header .team-year {
+            color: #ffffff;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 1em;
+        }
+
+        .tabs {
+            display: flex;
+            background: #001f3f;
+            border-bottom: 3px solid #FFD700;
+            padding: 0 20px;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 20px 30px;
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            font-size: 1.1em;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            font-weight: bold;
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFD700;
+        }
+
+        .tab-button.active {
+            color: #FFD700;
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #FFD700;
+            box-shadow: 0 0 10px #FFD700;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            background: rgba(30, 35, 50, 0.7);
+            border-left: 4px solid #FFD700;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .section.critical {
+            border-left-color: #ff6b6b;
+            background: rgba(50, 25, 30, 0.7);
+        }
+
+        .section.high-priority {
+            border-left-color: #FFD700;
+            background: rgba(40, 35, 20, 0.7);
+        }
+
+        .section h2 {
+            color: #FFD700;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section.critical h2 {
+            color: #ff6b6b;
+        }
+
+        .section.high-priority h2 {
+            color: #FFD700;
+        }
+
+        .command {
+            background: #0f1218;
+            border: 1px solid #2a2f3f;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .command:hover {
+            background: #161b26;
+            border-color: #FFD700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .command-comment {
+            color: #7a8194;
+            font-style: italic;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .command-code {
+            color: #6de194;
+            font-family: 'Consolas', monospace;
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .checklist {
+            background: #1a1f2e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .checklist h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .checklist ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .checklist li {
+            padding: 8px 10px;
+            margin: 5px 0;
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 3px solid #FFD700;
+            border-radius: 4px;
+        }
+
+        .checklist li::before {
+            content: '☐ ';
+            color: #FFD700;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .priority-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .badge-critical {
+            background: #ff6b6b;
+            color: #000;
+        }
+
+        .badge-high {
+            background: #FFD700;
+            color: #003366;
+        }
+
+        .badge-medium {
+            background: #4682B4;
+            color: #fff;
+        }
+
+        .search-box {
+            padding: 20px;
+            background: rgba(30, 35, 50, 0.7);
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            background: #0f1218;
+            border: 2px solid #2a2f3f;
+            border-radius: 25px;
+            color: #e0e0e0;
+            font-family: inherit;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .quick-ref {
+            background: linear-gradient(135deg, #003366 0%, #001f3f 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 2px solid #FFD700;
+        }
+
+        .quick-ref h3 {
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+
+        .quick-ref code {
+            background: #0f1218;
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #6de194;
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .warning-box h4 {
+            color: #ff6b6b;
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #003366 0%, #001f3f 100%);
+            padding: 20px;
+            text-align: center;
+            border-top: 3px solid #FFD700;
+            margin-top: 30px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .footer h3 {
+            color: #FFD700;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .footer p {
+            color: #b0b0b0;
+            margin: 5px 0;
+        }
+
+        .footer .motto {
+            color: #FFD700;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .header, .tabs {
+                display: none;
+            }
+            .tab-content {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="school-name">🏫 HAWAII BAPTIST ACADEMY 🏫</div>
+            <h1>⚔️ CYBERPATRIOT COMPETITION GUIDE ⚔️</h1>
+            <p>Quick Reference Guide - Windows | Linux | Cisco Networking</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab('windows')">🪟 Windows</button>
+            <button class="tab-button" onclick="openTab('linux')">🐧 Linux</button>
+            <button class="tab-button" onclick="openTab('cisco')">🌐 Cisco</button>
+        </div>
+
+        <!-- WINDOWS TAB -->
+        <div id="windows" class="tab-content active">
+            <div class="search-box">
+                <input type="text" id="searchWindows" placeholder="🔍 Search Windows commands..." onkeyup="searchCommands('windows')">
+            </div>
+
+            <div class="quick-ref">
+                <h3>⚡ Quick Essential Commands</h3>
+                <p><code>Win+R</code> → Open Run Dialog | <code>lusrmgr.msc</code> → Users & Groups | <code>secpol.msc</code> → Security Policy | <code>services.msc</code> → Services | <code>gpedit.msc</code> → Group Policy</p>
+            </div>
+
+            <div class="section critical" data-keywords="readme forensics first steps workflow competition">
+                <h2>🚨 FIRST STEPS - DO THIS FIRST! <span class="priority-badge badge-critical">CRITICAL</span></h2>
+                
+                <div class="warning-box">
+                    <h4>⚠️ COMPETITION WORKFLOW - FOLLOW THIS ORDER!</h4>
+                    <p>Doing these steps out of order can cost you significant points!</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 1: Read README file thoroughly (on Desktop)</span>
+                    <span class="command-code">notepad C:\Users\[Username]\Desktop\README.txt
+
+# Document:
+- Authorized users and which ones are admins
+- Required services (FTP, Remote Desktop, etc.)
+- Required applications (GIMP, Inkscape, etc.)
+- Any special instructions</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 2: ANSWER FORENSICS QUESTIONS FIRST!</span>
+                    <span class="command-code"># Open Forensics Questions file on Desktop
+# Answer these BEFORE making ANY system changes
+# Worth 15-30 points typically
+# You might delete evidence if you secure the system first!
+
+# Common forensics tasks:
+# - Find file hashes (Get-FileHash in PowerShell)
+# - Locate hidden files
+# - Search Event Viewer logs
+# - Find specific registry keys</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 3: Take initial screenshot of score</span>
+                    <span class="command-code"># Open Scoring Report in browser
+# Screenshot current score
+# This helps track progress</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 4: Preserve current policy state (before making changes)</span>
+                    <span class="command-code">gpresult /z >> %windir%\detailedpolicies.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 5: Create work log document</span>
+                    <span class="command-code"># Document every change you make
+# User added/removed
+# Services disabled
+# Policies changed
+# This helps troubleshoot if something breaks</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="user management users administrators delete remove lusrmgr">
+                <h2>👥 USER MANAGEMENT <span class="priority-badge badge-high">15-30 POINTS</span></h2>
+                
+                <div class="warning-box">
+                    <h4>💡 PRO TIP</h4>
+                    <p>User management is typically worth 15-30 points per round! Check README carefully for authorized users.</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># BEST GUI TOOL - Use this first!</span>
+                    <span class="command-code">lusrmgr.msc</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List all local users</span>
+                    <span class="command-code">net user</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Get detailed user info (PowerShell)</span>
+                    <span class="command-code">Get-LocalUser | Select-Object Name, Enabled, PasswordRequired, PasswordLastSet | Format-Table</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List administrators (CRITICAL - compare to README!)</span>
+                    <span class="command-code">net localgroup administrators</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check other important groups</span>
+                    <span class="command-code">net localgroup "Remote Desktop Users"
+net localgroup "Backup Operators"
+net localgroup "Power Users"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable guest account (ALWAYS do this!)</span>
+                    <span class="command-code">net user guest /active:no</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete unauthorized user</span>
+                    <span class="command-code">net user USERNAME /delete</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Add authorized user (if missing from README)</span>
+                    <span class="command-code">net user USERNAME ComplexP@ssw0rd! /add</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Add user to administrators group</span>
+                    <span class="command-code">net localgroup administrators USERNAME /add</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Remove user from administrators</span>
+                    <span class="command-code">net localgroup administrators USERNAME /delete</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Change user password</span>
+                    <span class="command-code">net user USERNAME NewP@ssw0rd123</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># BATCH password change for all users</span>
+                    <span class="command-code">set pwd="ComplexP@ss123!"
+for /f %%i in ('wmic useraccount get name ^| findstr /r /v /i "^$ Name"') do net user %%i %pwd%</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Set all users to require password expiration</span>
+                    <span class="command-code">wmic useraccount set PasswordExpires=true
+wmic useraccount set PasswordChangeable=true</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for users with no password required</span>
+                    <span class="command-code">wmic useraccount where "PasswordRequired=FALSE" get Name</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open advanced user management</span>
+                    <span class="command-code">control userpasswords2
+# Check "Users must enter a user name and password to use this computer"</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="password policy security age complexity">
+                <h2>🔐 PASSWORD POLICY <span class="priority-badge badge-high">HIGH VALUE</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Set comprehensive password policy (min 8, max age 90, min age 1, history 5)</span>
+                    <span class="command-code">net accounts /minpwlen:8 /maxpwage:90 /minpwage:1 /uniquepw:5</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># For administrators - stricter policy (max age 30)</span>
+                    <span class="command-code">net accounts /minpwlen:10 /maxpwage:30 /minpwage:7 /uniquepw:10</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Set account lockout threshold (10 attempts typical)</span>
+                    <span class="command-code">net accounts /lockoutthreshold:10
+net accounts /lockoutduration:30
+net accounts /lockoutwindow:30</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># View current password policy</span>
+                    <span class="command-code">net accounts</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Local Security Policy (more options)</span>
+                    <span class="command-code">secpol.msc
+# Go to: Account Policies -> Password Policy
+# - Enforce password history: 5+ passwords
+# - Maximum password age: 90 days
+# - Minimum password age: 1 day
+# - Minimum password length: 8 characters
+# - Password must meet complexity requirements: Enabled
+# - Store passwords using reversible encryption: Disabled</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="services telnet ftp remote disable snmp">
+                <h2>⚙️ SERVICES <span class="priority-badge badge-high">HIGH VALUE</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Open Services Manager (BEST for overview)</span>
+                    <span class="command-code">services.msc</span>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ READ README FIRST!</h4>
+                    <p>Some services might be required! Check README before disabling services like FTP, Remote Desktop, IIS, etc.</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List all running services</span>
+                    <span class="command-code">net start</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># CRITICAL - Start essential security services</span>
+                    <span class="command-code">sc config mpssvc start= auto && net start mpssvc
+sc config WinDefend start= auto && net start WinDefend
+sc config wuauserv start= auto && net start wuauserv
+sc config EventLog start= auto && net start EventLog
+sc config WSearch start= auto && net start WSearch</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># CRITICAL - Disable dangerous services (unless README requires them)</span>
+                    <span class="command-code">sc config TelNet start= disabled && net stop TelNet
+sc config tlntsvr start= disabled && net stop tlntsvr
+sc config snmptrap start= disabled && net stop snmptrap
+sc config remoteregistry start= disabled && net stop remoteregistry
+sc config WinRM start= disabled && net stop WinRM
+sc config RpcLocator start= disabled && net stop RpcLocator
+sc config RemoteAccess start= disabled && net stop RemoteAccess</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable Remote Desktop (unless README says keep it)</span>
+                    <span class="command-code">reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 1 /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable FTP (unless README requires it)</span>
+                    <span class="command-code">sc config FTPSVC start= disabled && net stop FTPSVC
+sc config MSFTPSVC start= disabled && net stop MSFTPSVC</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for suspicious services</span>
+                    <span class="command-code"># In services.msc, look for:
+# - Services with NO description (often backdoors)
+# - Services with description matching name exactly (suspicious)
+# - Recently modified services
+# - Services running from user directories
+# - "Remote Services Manager (RSMSS)" - common backdoor
+# - Suspicious svchost.exe services</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show which processes are using network ports</span>
+                    <span class="command-code">netstat -bano</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="firewall network protection">
+                <h2>🔥 FIREWALL <span class="priority-badge badge-high">QUICK POINTS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Enable firewall for all profiles (ALWAYS DO THIS!)</span>
+                    <span class="command-code">netsh advfirewall set allprofiles state on</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check firewall status</span>
+                    <span class="command-code">netsh advfirewall show allprofiles</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Block all inbound by default, allow outbound</span>
+                    <span class="command-code">netsh advfirewall set allprofiles firewallpolicy blockinbound,allowoutbound</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Windows Defender Firewall GUI</span>
+                    <span class="command-code">wf.msc</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Reset firewall to defaults (if broken)</span>
+                    <span class="command-code">netsh advfirewall reset</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="windows defender antivirus protection malware">
+                <h2>🛡️ WINDOWS DEFENDER <span class="priority-badge badge-high">QUICK POINTS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Enable Windows Defender</span>
+                    <span class="command-code">sc config WinDefend start= auto && net start WinDefend</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Windows Defender (Run full scan!)</span>
+                    <span class="command-code">"C:\Program Files\Windows Defender\MSASCui.exe"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable real-time protection via registry</span>
+                    <span class="command-code">reg add "HKLM\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection" /v DisableRealtimeMonitoring /t REG_DWORD /d 0 /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Remove dangerous Windows Defender exclusions</span>
+                    <span class="command-code"># Check for C:\ exclusion - this is a MAJOR vulnerability!
+reg query "HKLM\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths"
+
+# Delete C:\ exclusion if present
+reg delete "HKLM\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths" /v "C:\" /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable SmartScreen</span>
+                    <span class="command-code">Set-MpPreference -EnableNetworkProtection Enabled</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Run Windows Defender scan</span>
+                    <span class="command-code">"%ProgramFiles%\Windows Defender\MpCmdRun.exe" -Scan -ScanType 2</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="windows update patches security">
+                <h2>🔄 UPDATES & PATCHES</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Start and enable Windows Update service</span>
+                    <span class="command-code">sc config wuauserv start= auto && net start wuauserv</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Windows Update settings</span>
+                    <span class="command-code">start ms-settings:windowsupdate</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for updates via PowerShell</span>
+                    <span class="command-code">Install-Module PSWindowsUpdate -Force
+Get-WindowsUpdate
+Install-WindowsUpdate -AcceptAll</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="local security policy audit secpol gpedit">
+                <h2>🔒 LOCAL SECURITY POLICIES <span class="priority-badge badge-high">MANY POINTS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Open Local Security Policy</span>
+                    <span class="command-code">secpol.msc</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># QUICK WIN POLICIES - These frequently score points!</span>
+                    <span class="command-code"># Navigate to: Local Policies -> Security Options
+
+# Set these policies (use GUI or commands below):
+✅ Accounts: Limit local account use of blank passwords to console logon only - ENABLED
+✅ Interactive logon: Do not display last user name - ENABLED
+✅ Interactive logon: Do not require CTRL+ALT+DEL - DISABLED
+✅ Network access: Do not allow anonymous enumeration of SAM accounts - ENABLED
+✅ Network security: Do not store LAN Manager hash value on next password change - ENABLED
+✅ Microsoft network client: Digitally sign communications (always) - ENABLED
+✅ Microsoft network server: Digitally sign communications (always) - ENABLED
+✅ Network security: LAN Manager authentication level - Send NTLMv2 response only
+✅ Shutdown: Allow system to be shut down without having to log on - DISABLED</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable ALL audit policies (CRITICAL!)</span>
+                    <span class="command-code">auditpol.exe /set /category:* /failure:enable /success:enable</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Or via GUI: secpol.msc -> Local Policies -> Audit Policy</span>
+                    <span class="command-code"># Set ALL to Success, Failure:
+- Audit account logon events
+- Audit account management
+- Audit directory service access
+- Audit logon events
+- Audit object access
+- Audit policy change
+- Audit privilege use
+- Audit process tracking
+- Audit system events</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Group Policy Editor (more advanced)</span>
+                    <span class="command-code">gpedit.msc</span>
+                </div>
+            </div>
+
+            <div class="section critical" data-keywords="scheduled tasks backdoor malware persistence">
+                <h2>📅 SCHEDULED TASKS - BACKDOOR CHECK <span class="priority-badge badge-critical">CRITICAL</span></h2>
+                
+                <div class="warning-box">
+                    <h4>🚨 HIGH BACKDOOR RISK!</h4>
+                    <p>Scheduled tasks are a common persistence mechanism. Check these CAREFULLY!</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List all scheduled tasks to file for analysis</span>
+                    <span class="command-code">schtasks /query /v /fo list > C:\Users\Public\schtasksBackup.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find suspicious tasks (tasks with file paths in "Task To Run")</span>
+                    <span class="command-code">findstr /i "C:\" C:\Users\Public\schtasksBackup.txt
+notepad C:\Users\Public\schtasksBackup.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Look for tasks created by users (not Microsoft)</span>
+                    <span class="command-code"># Search for custom authors in the backup file
+# Look for hostnames or usernames in "Author:" field
+# Microsoft tasks typically have "Author: Microsoft Corporation"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Common signs of malicious scheduled tasks:</span>
+                    <span class="command-code"># - Task runs at logon or frequently (every few minutes)
+# - Task runs as SYSTEM user
+# - Task runs executables from:
+#   - C:\Users\[user]\AppData\
+#   - C:\Windows\Temp\
+#   - C:\Logs\
+# - Task has suspicious names
+# - Task author is not Microsoft
+# - Task created recently
+
+# Example malicious indicators:
+# "Task To Run: C:\Logs\tini.exe"
+# "Task To Run: C:\Users\user\AppData\Roaming\bd.exe"
+# "Author: [ComputerName]\[username]"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Task Scheduler GUI (easier to review)</span>
+                    <span class="command-code">taskschd.msc</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete specific malicious task</span>
+                    <span class="command-code">schtasks /delete /tn "TaskName" /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># View recently modified tasks</span>
+                    <span class="command-code">dir /o-d C:\Windows\System32\Tasks\ | more
+dir /o-d C:\Windows\System32\Tasks\Microsoft\Windows\ | more</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># ⚠️ BEFORE deleting tasks, find and delete the malicious file first!</span>
+                    <span class="command-code"># Note the file path from "Task To Run" field
+# Delete the malicious .exe or .bat file
+# THEN delete the scheduled task
+# Otherwise points check might fail!</span>
+                </div>
+            </div>
+
+            <div class="section critical" data-keywords="registry backdoor cmd task manager control panel">
+                <h2>📝 REGISTRY HARDENING <span class="priority-badge badge-critical">BACKDOORS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Remove common backdoor registry keys</span>
+                    <span class="command-code"># These disable critical system tools - check and delete!
+
+# Re-enable Command Prompt
+reg delete "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\System" /v "DisableCMD" /f
+
+# Re-enable Task Manager
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "DisableTaskMgr" /f
+
+# Re-enable Control Panel
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v "NoControlPanel" /f
+
+# Re-enable Windows Defender Real-Time Protection
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Real-Time Protection" /v "DisableRealTimeMonitoring" /f
+
+# Remove C:\ from Windows Defender exclusions
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Exclusions\Paths" /v "C:\" /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable show hidden and system files</span>
+                    <span class="command-code">reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v Hidden /t REG_DWORD /d 1 /f
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced /v ShowSuperHidden /t REG_DWORD /d 1 /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable UAC (User Account Control)</span>
+                    <span class="command-code">reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v EnableLUA /t REG_DWORD /d 1 /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable AutoRun/AutoPlay</span>
+                    <span class="command-code">reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check startup programs in registry</span>
+                    <span class="command-code">reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Registry Editor for manual inspection</span>
+                    <span class="command-code">regedit</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="network shares wmic share admin">
+                <h2>📂 NETWORK SHARES <span class="priority-badge badge-high">COMMON VULN</span></h2>
+                
+                <div class="warning-box">
+                    <h4>⚠️ FILE SERVER WARNING!</h4>
+                    <p>DO NOT delete shares if image is a File Server or uses SMB! Check README first!</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># View all network shares</span>
+                    <span class="command-code">wmic share
+# or
+net share</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Standard shares (usually OK to keep):</span>
+                    <span class="command-code"># ADMIN$ - Remote administration
+# C$ - Default share
+# IPC$ - Inter-process communication
+
+# Delete unauthorized shares (NOT on SMB/File servers!)
+wmic share [ShareName] delete
+# or
+net share [ShareName] /delete</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Open Shared Folders management</span>
+                    <span class="command-code">fsmgmt.msc</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check share permissions</span>
+                    <span class="command-code"># Right-click share -> Properties -> Share Permissions
+# Make sure "Everyone" doesn't have Full Control</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="files search media mp3 mp4 prohibited hacking tools">
+                <h2>🔍 FILE SEARCHING - PROHIBITED CONTENT</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Search for ALL prohibited media files from C:\Users</span>
+                    <span class="command-code">cd C:\Users
+dir *.mp3 *.png *.tif *.jpg *.gif *.aif *.iff *.m3u *.m4a *.mid *.mpa *.ra *.wav *.wma *.3g2 *.3gp *.asf *.asx *.avi *.flv *.m4v *.mov *.mp4 *.mpg *.rm *.srt *.swf *.vob *.wmv /s /b /a h > C:\Users\Public\mediafiles.txt
+
+notepad C:\Users\Public\mediafiles.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find executable files in user directories (potential malware)</span>
+                    <span class="command-code">cd C:\Users
+dir *.exe /s /b /a h > C:\Users\Public\executables.txt
+notepad C:\Users\Public\executables.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Search for specific file type</span>
+                    <span class="command-code">dir *.mp3 /s /b
+dir *.mp4 /s /b</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete file (be careful!)</span>
+                    <span class="command-code">del /f /q "C:\path\to\file.mp3"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check common malware locations</span>
+                    <span class="command-code"># Check these directories for suspicious files:
+dir C:\Windows\Temp\
+dir C:\Windows\Globalization\Sorting\  # Check for Genie.exe worm
+dir "C:\Users\%username%\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\"
+dir C:\Windows\Help\</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Use PowerShell for more advanced searching</span>
+                    <span class="command-code">Get-ChildItem C:\Users -Recurse -Include *.mp3,*.mp4,*.avi -File | Select-Object FullName</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="programs uninstall hacking tools wireshark nmap cain">
+                <h2>🗑️ UNINSTALL UNAUTHORIZED PROGRAMS</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Open Programs and Features</span>
+                    <span class="command-code">appwiz.cpl</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List all installed programs</span>
+                    <span class="command-code">wmic product get name</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Uninstall program via command line</span>
+                    <span class="command-code">wmic product where "name='ProgramName'" call uninstall</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Search for common hacking tools and games</span>
+                    <span class="command-code">wmic product get name | findstr /i "wireshark nmap cain metasploit john ophcrack aircrack hydra medusa nikto burp sqlmap"
+
+# Common prohibited software:
+# Hacking: Wireshark, nmap, Cain & Abel, John the Ripper, Ophcrack, Aircrack, Metasploit
+# P2P: Vuze, Frostwire, uTorrent, LimeWire
+# Remote: TeamViewer (unless required), VNC servers
+# Games: Minesweeper, Solitaire, any games not in README
+# Media: Audacity, VLC (check README)</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check required programs from README!</span>
+                    <span class="command-code"># Common required programs that should NOT be deleted:
+# - GIMP
+# - Inkscape  
+# - OpenCPN
+# - Firefox/Chrome (usually required)
+# - Adobe Reader</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="windows features disable telnet ftp smb iis">
+                <h2>⚙️ WINDOWS FEATURES - DISABLE DANGEROUS ONES</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Open Windows Features dialog</span>
+                    <span class="command-code">optionalfeatures.exe</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable SMB 1.0 via PowerShell (IMPORTANT!)</span>
+                    <span class="command-code">Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol -NoRestart</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable Telnet Client</span>
+                    <span class="command-code">Disable-WindowsOptionalFeature -Online -FeatureName TelnetClient -NoRestart</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable TFTP Client</span>
+                    <span class="command-code">Disable-WindowsOptionalFeature -Online -FeatureName TFTP -NoRestart</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Features to disable in GUI (unless README requires them):</span>
+                    <span class="command-code">UNCHECK these in optionalfeatures.exe:
+☑ SMB 1.0/CIFS File Sharing Support
+☑ Telnet Client
+☑ Telnet Server
+☑ TFTP Client
+☑ SNMP (Simple Network Management Protocol)
+☑ RIP Listener
+☑ Client for NFS
+☑ Internet Information Services (IIS) - unless web server
+☑ World Wide Web Services
+☑ FTP Server
+☑ Simple TCPIP Services</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="browser firefox chrome security settings">
+                <h2>🌐 BROWSER HARDENING</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Firefox Security Settings</span>
+                    <span class="command-code"># Open Firefox -> Settings (about:preferences)
+
+Privacy & Security:
+✅ Enhanced Tracking Protection: Strict
+✅ Send websites a "Do Not Track" signal: Always
+✅ HTTPS-Only Mode: Enable in all windows
+✅ Block dangerous and deceptive content: Check
+✅ Block dangerous downloads: Check
+✅ Warn about unwanted software: Check
+✅ Block pop-up windows: Check
+
+# Firefox advanced config (about:config)
+# Use user.js from github.com/pyllyukko/user.js for hardening</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Chrome/Edge Security Settings</span>
+                    <span class="command-code"># Open Settings -> Privacy and security
+
+✅ Send "Do Not Track" request
+✅ Safe Browsing: Enhanced protection
+✅ Always use secure connections
+✅ Block third-party cookies
+✅ Block pop-ups and redirects
+✅ Ask before accessing location/camera/microphone</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Internet Explorer (for Windows Server)</span>
+                    <span class="command-code"># For Windows Servers, enable:
+✅ IE Enhanced Security Configuration for Administrators
+✅ IE Enhanced Security Configuration for Users
+✅ SmartScreen Filter
+✅ Popup Blocker
+✅ Protected Mode (High security)</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="network connections netstat ports hosts ipconfig">
+                <h2>🌐 NETWORK DIAGNOSTICS</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Show all network connections with process IDs</span>
+                    <span class="command-code">netstat -ano</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show listening ports only</span>
+                    <span class="command-code">netstat -an | findstr "LISTENING"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show which programs are using ports</span>
+                    <span class="command-code">netstat -bano</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check hosts file for malicious entries</span>
+                    <span class="command-code">notepad C:\Windows\System32\drivers\etc\hosts
+
+# Should be mostly empty except:
+# 127.0.0.1       localhost
+# ::1             localhost
+
+# Delete any suspicious entries redirecting websites</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># IP configuration</span>
+                    <span class="command-code">ipconfig /all</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Flush DNS cache</span>
+                    <span class="command-code">ipconfig /flushdns</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="sysinternals autoruns procexp process explorer tools">
+                <h2>🔧 ADVANCED TOOLS - SysInternals</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Download SysInternals tools from:</span>
+                    <span class="command-code">http://live.sysinternals.com/
+
+# Or run directly from network:
+\\live.sysinternals.com\tools\autoruns.exe
+\\live.sysinternals.com\tools\procexp.exe</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># AutoRuns - Find startup malware</span>
+                    <span class="command-code"># Download: http://live.sysinternals.com/Autoruns.exe
+# Run as Administrator
+
+Options -> Scan Options:
+✅ Verify Code Signatures
+✅ Check VirusTotal.com
+✅ Submit Unknown Images
+
+# Look for:
+# - Unsigned/unverified applications
+# - Items with VirusTotal detections (red/pink)
+# - Suspicious .bat files
+# - Items from user directories
+# - Recently added items
+
+# Uncheck malicious items to disable them
+# Then delete the actual files</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Process Explorer - Monitor running processes</span>
+                    <span class="command-code"># Download: http://live.sysinternals.com/procexp.exe
+# Run as Administrator
+
+Options:
+✅ Verify Image Signatures
+✅ Check VirusTotal.com
+✅ Submit unknown executables
+
+View -> Select Columns -> Process Performance:
+✅ Process Timeline
+
+# Sort by VirusTotal column
+# Look for processes with detections
+# Suspend suspicious processes
+# Find where they originate
+# Delete malware and backdoors</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Use msconfig for startup programs</span>
+                    <span class="command-code">msconfig
+# Go to Startup tab (or opens Task Manager on Win 10)
+# Disable suspicious startup items</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="action center uac security settings control panel">
+                <h2>⚙️ ACTION CENTER & SECURITY SETTINGS</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Open Action Center</span>
+                    <span class="command-code">control /name Microsoft.ActionCenter
+
+# Enable ALL security options:
+✅ Windows Defender
+✅ Windows Firewall
+✅ Windows Update
+✅ SmartScreen
+✅ User Account Control (UAC)
+✅ Network protection</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure UAC to recommended level or higher</span>
+                    <span class="command-code">UserAccountControlSettings.exe
+
+# Set slider to at least 3rd level:
+"Notify me only when programs try to make changes to my computer"</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable Guest account (critical!)</span>
+                    <span class="command-code">net user guest /active:no</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="event viewer logs security audit">
+                <h2>📊 EVENT VIEWER - LOG ANALYSIS</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Open Event Viewer</span>
+                    <span class="command-code">eventvwr.msc</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for suspicious events:</span>
+                    <span class="command-code"># Windows Logs -> Security
+# Look for:
+# - Failed logon attempts (Event ID 4625)
+# - Account lockouts (Event ID 4740)
+# - User account created/deleted (4720, 4726)
+# - User added to privileged group (4728, 4732)
+# - Service installed (7045)
+# - Audit policy changes (4719)
+
+# Windows Logs -> System
+# Look for service start/stop events
+# System errors</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="forensics questions hash event viewer">
+                <h2>🔍 FORENSICS QUESTIONS - COMMON TASKS</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Calculate file hash (for forensics questions)</span>
+                    <span class="command-code"># PowerShell:
+Get-FileHash "C:\path\to\file.txt" -Algorithm MD5
+Get-FileHash "C:\path\to\file.txt" -Algorithm SHA1
+Get-FileHash "C:\path\to\file.txt" -Algorithm SHA256
+Get-FileHash "C:\path\to\file.txt" -Algorithm RIPEMD160</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find hidden files</span>
+                    <span class="command-code">dir /ah /s C:\Users\
+
+# Or in PowerShell:
+Get-ChildItem -Path C:\Users\ -Hidden -Recurse</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Search file contents</span>
+                    <span class="command-code">findstr /s /i "searchterm" C:\Users\*.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check last modified time</span>
+                    <span class="command-code">dir /o-d /t:w C:\path\to\directory</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>📋 WINDOWS CYBERPATRIOT CHECKLIST - PRIORITY ORDER</h3>
+                <ul>
+                    <li><strong>READ README THOROUGHLY</strong> - Note users, admins, required services/apps</li>
+                    <li><strong>ANSWER FORENSICS QUESTIONS FIRST</strong> - Before ANY system changes!</li>
+                    <li>Take screenshot of initial score</li>
+                    <li>Document all changes in notepad</li>
+                    <li>Backup current policies (gpresult /z)</li>
+                    <li><strong>USER MANAGEMENT (15-30 pts)</strong> - Use lusrmgr.msc</li>
+                    <li>Disable guest account</li>
+                    <li>Delete unauthorized users</li>
+                    <li>Remove unauthorized administrators</li>
+                    <li>Add missing authorized users</li>
+                    <li>Set strong passwords for all users</li>
+                    <li><strong>PASSWORD POLICY</strong> - Set via net accounts or secpol.msc</li>
+                    <li>Min length 8+, max age 90, min age 1, history 5</li>
+                    <li>Enable password complexity</li>
+                    <li>Set account lockout (threshold 10)</li>
+                    <li><strong>FIREWALL</strong> - Enable all profiles</li>
+                    <li><strong>WINDOWS DEFENDER</strong> - Enable and run scan</li>
+                    <li>Remove C:\ from exclusions if present</li>
+                    <li><strong>SERVICES</strong> - Use services.msc</li>
+                    <li>Start: Windows Defender, Firewall, Windows Update</li>
+                    <li>Disable: Telnet, SNMP, Remote Registry, WinRM (unless required)</li>
+                    <li>Check for services with no description (backdoors!)</li>
+                    <li><strong>WINDOWS UPDATE</strong> - Enable and run updates</li>
+                    <li><strong>LOCAL SECURITY POLICIES</strong> - Use secpol.msc</li>
+                    <li>Enable all audit policies (auditpol /set /category:*)</li>
+                    <li>Set quick-win security options</li>
+                    <li><strong>SCHEDULED TASKS</strong> - Use taskschd.msc</li>
+                    <li>Export to file and review for backdoors</li>
+                    <li>Delete malicious tasks (after deleting the files!)</li>
+                    <li><strong>REGISTRY HARDENING</strong></li>
+                    <li>Re-enable CMD, Task Manager, Control Panel</li>
+                    <li>Enable hidden files display</li>
+                    <li>Enable UAC</li>
+                    <li>Disable AutoRun/AutoPlay</li>
+                    <li><strong>NETWORK SHARES</strong> - Check with wmic share</li>
+                    <li>Delete unauthorized shares (not on file servers!)</li>
+                    <li><strong>MEDIA FILES</strong> - Search for prohibited content</li>
+                    <li>Delete MP3s, MP4s, games (unless in README)</li>
+                    <li>Search for executables in user directories</li>
+                    <li><strong>PROGRAMS</strong> - Use appwiz.cpl</li>
+                    <li>Uninstall hacking tools (Wireshark, nmap, etc.)</li>
+                    <li>Uninstall games, P2P software</li>
+                    <li>Keep required programs from README!</li>
+                    <li><strong>WINDOWS FEATURES</strong> - Use optionalfeatures.exe</li>
+                    <li>Disable SMB 1.0, Telnet, TFTP, IIS (unless required)</li>
+                    <li><strong>BROWSERS</strong> - Harden Firefox/Chrome/IE</li>
+                    <li>Enable security features, block popups</li>
+                    <li><strong>STARTUP PROGRAMS</strong> - Check msconfig and autoruns</li>
+                    <li>Disable suspicious startup items</li>
+                    <li><strong>CHECK CRITICAL FILES</strong></li>
+                    <li>Review C:\Windows\System32\drivers\etc\hosts</li>
+                    <li>Check C:\Windows\Temp for malware</li>
+                    <li>Check Startup folders</li>
+                    <li><strong>RUN SYSINTERNALS TOOLS</strong></li>
+                    <li>AutoRuns - Find startup malware</li>
+                    <li>Process Explorer - Find running malware</li>
+                    <li>Event Viewer - Check security logs</li>
+                    <li>Verify scoring report is updating</li>
+                    <li>Take final screenshot</li>
+                    <li><strong>SAVE YOUR WORK - Document everything!</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LINUX TAB -->
+        <div id="linux" class="tab-content">
+            <div class="search-box">
+                <input type="text" id="searchLinux" placeholder="🔍 Search Linux commands..." onkeyup="searchCommands('linux')">
+            </div>
+
+            <div class="quick-ref">
+                <h3>⚡ Quick Essential Commands</h3>
+                <p><code>sudo apt-get update && sudo apt-get upgrade -y</code> → Update System | <code>sudo ufw enable</code> → Enable Firewall | <code>sudo passwd username</code> → Change Password</p>
+            </div>
+
+            <div class="section critical" data-keywords="readme forensics first steps workflow competition">
+                <h2>🚨 FIRST STEPS - DO THIS FIRST! <span class="priority-badge badge-critical">CRITICAL</span></h2>
+                
+                <div class="warning-box">
+                    <h4>⚠️ LINUX COMPETITION WORKFLOW</h4>
+                    <p>Follow this order for best results!</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 1: Read README file</span>
+                    <span class="command-code">cat ~/Desktop/README
+# or
+gedit ~/Desktop/README
+
+# Document:
+- Authorized users and admins
+- Required services (SSH, Apache, FTP, etc.)
+- Prohibited services
+- Required software</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 2: ANSWER FORENSICS QUESTIONS FIRST!</span>
+                    <span class="command-code"># Do this before making ANY system changes
+# You might delete evidence!</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 3: Lock root account immediately</span>
+                    <span class="command-code">sudo passwd -l root</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="user management users sudo delete passwd">
+                <h2>👥 USER MANAGEMENT <span class="priority-badge badge-high">15-30 POINTS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># List all users</span>
+                    <span class="command-code">cat /etc/passwd | cut -d: -f1</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List users with UID >= 1000 (regular users)</span>
+                    <span class="command-code">awk -F: '$3 >= 1000 {print $1}' /etc/passwd</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check who has sudo privileges</span>
+                    <span class="command-code">grep -Po '^sudo.+:\K.*$' /etc/group</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for UID 0 users (should ONLY be root!)</span>
+                    <span class="command-code">awk -F: '($3 == "0") {print}' /etc/passwd</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for users with empty passwords</span>
+                    <span class="command-code">sudo awk -F: '($2 == "" || $2 == "!") {print $1}' /etc/shadow</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete user and their home directory</span>
+                    <span class="command-code">sudo userdel -r username</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Add authorized user</span>
+                    <span class="command-code">sudo useradd -m -s /bin/bash username
+sudo passwd username</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Add user to sudo group</span>
+                    <span class="command-code">sudo usermod -aG sudo username</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Remove user from sudo group</span>
+                    <span class="command-code">sudo deluser username sudo
+# or
+sudo gpasswd -d username sudo</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable/lock a user account</span>
+                    <span class="command-code">sudo usermod -L username
+# or
+sudo passwd -l username</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Change user password (AFTER setting policy!)</span>
+                    <span class="command-code">sudo passwd username</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable guest account in lightdm</span>
+                    <span class="command-code">sudo nano /etc/lightdm/lightdm.conf
+
+# Add these lines under [Seat:*]:
+allow-guest=false
+greeter-hide-users=true
+greeter-show-manual-login=true
+autologin-user=none</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check /etc/sudoers for unauthorized access</span>
+                    <span class="command-code">sudo visudo
+
+# Look for and remove:
+# - NOPASSWD entries
+# - !authenticate entries  
+# - Specific commands users can run without password
+# - Group lines preceded by %</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="password policy age complexity security pam">
+                <h2>🔐 PASSWORD POLICY <span class="priority-badge badge-high">HIGH VALUE</span></h2>
+                
+                <div class="warning-box">
+                    <h4>⚠️ SET POLICY BEFORE CHANGING PASSWORDS!</h4>
+                    <p>If you change passwords first, you'll have to change them again after setting policy.</p>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Install password quality library (FIRST!)</span>
+                    <span class="command-code">sudo apt-get install libpam-cracklib -y
+# or on newer systems:
+sudo apt-get install libpam-pwquality -y</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Edit /etc/login.defs for password aging</span>
+                    <span class="command-code">sudo nano /etc/login.defs
+
+# Set these values:
+PASS_MAX_DAYS   30
+PASS_MIN_DAYS   7
+PASS_WARN_AGE   12
+PASS_MIN_LEN    8</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure password complexity in /etc/pam.d/common-password</span>
+                    <span class="command-code">sudo nano /etc/pam.d/common-password
+
+# Add these lines:
+password required pam_unix.so obscure sha512 remember=12 use_authtok
+password required pam_cracklib.so retry=3 minlen=13 difok=4 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1 maxrepeat=3
+
+# Explanation:
+# remember=12 - remember last 12 passwords
+# minlen=13 - minimum length 13
+# difok=4 - at least 4 different characters from old password
+# dcredit=-1 - at least 1 digit required
+# ucredit=-1 - at least 1 uppercase required
+# ocredit=-1 - at least 1 special character required
+# lcredit=-1 - at least 1 lowercase required
+# maxrepeat=3 - max 3 repeated characters</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enforce account lockout policy in /etc/pam.d/common-auth</span>
+                    <span class="command-code">sudo nano /etc/pam.d/common-auth
+
+# Add this line at the TOP:
+auth required pam_tally2.so deny=5 audit unlock_time=1800 onerr=fail even_deny_root
+
+# deny=5 - lock after 5 failed attempts
+# unlock_time=1800 - unlock after 30 minutes</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Set account expiry defaults</span>
+                    <span class="command-code">sudo nano /etc/default/useradd
+
+# Set:
+EXPIRE=30
+INACTIVE=30</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Change existing user password ages</span>
+                    <span class="command-code">sudo chage -m 7 -M 30 -W 12 username
+
+# For all users:
+for user in $(awk -F: '$3 >= 1000 {print $1}' /etc/passwd); do sudo chage -m 7 -M 30 -W 12 $user; done</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="firewall ufw security network">
+                <h2>🔥 FIREWALL - UFW <span class="priority-badge badge-high">QUICK POINTS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Install UFW (if not installed)</span>
+                    <span class="command-code">sudo apt-get install ufw -y</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure UFW rules BEFORE enabling</span>
+                    <span class="command-code">sudo ufw default deny incoming
+sudo ufw default allow outgoing</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Allow required services (check README!)</span>
+                    <span class="command-code">sudo ufw allow 22/tcp    # SSH
+sudo ufw allow 80/tcp    # HTTP
+sudo ufw allow 443/tcp   # HTTPS</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable UFW</span>
+                    <span class="command-code">sudo ufw enable</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable UFW logging</span>
+                    <span class="command-code">sudo ufw logging on
+sudo ufw logging high</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check UFW status</span>
+                    <span class="command-code">sudo ufw status verbose</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete a rule</span>
+                    <span class="command-code">sudo ufw delete allow 80/tcp</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="ssh security sshd config">
+                <h2>🔐 SSH HARDENING <span class="priority-badge badge-high">COMMON VULN</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Edit SSH configuration</span>
+                    <span class="command-code">sudo nano /etc/ssh/sshd_config
+
+# Critical settings:
+Protocol 2
+PermitRootLogin no
+PermitEmptyPasswords no
+PasswordAuthentication yes
+PubkeyAuthentication yes
+X11Forwarding no
+MaxAuthTries 4
+IgnoreRhosts yes
+HostbasedAuthentication no
+LogLevel VERBOSE
+
+# Session timeout settings:
+ClientAliveInterval 300
+ClientAliveCountMax 0</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Test SSH config before restarting</span>
+                    <span class="command-code">sudo sshd -t</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Restart SSH service</span>
+                    <span class="command-code">sudo systemctl restart ssh
+# or
+sudo service ssh restart</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="updates packages apt security">
+                <h2>🔄 UPDATES & PACKAGE MANAGEMENT</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Update package lists</span>
+                    <span class="command-code">sudo apt-get update</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Upgrade all packages</span>
+                    <span class="command-code">sudo apt-get upgrade -y</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Full distribution upgrade (use carefully!)</span>
+                    <span class="command-code"># NOT RECOMMENDED in competition - can break services
+# sudo apt-get dist-upgrade -y</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Enable automatic security updates</span>
+                    <span class="command-code">sudo apt-get install unattended-upgrades -y
+sudo dpkg-reconfigure unattended-upgrades</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure automatic updates</span>
+                    <span class="command-code">sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+
+# Set:
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+APT::Periodic::Unattended-Upgrade "1";</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Remove unwanted packages</span>
+                    <span class="command-code"># Common hacking/prohibited tools to remove:
+sudo apt-get purge john nmap wireshark hydra medusa ophcrack nikto netcat ncat telnetd vsftpd pure-ftpd proftpd samba xinetd nis rsh-client talk -y
+
+sudo apt-get autoremove -y</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check if specific package is installed</span>
+                    <span class="command-code">dpkg -l | grep package-name</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="services systemctl disable backdoor">
+                <h2>⚙️ SERVICES MANAGEMENT <span class="priority-badge badge-high">HIGH VALUE</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># List all running services</span>
+                    <span class="command-code">sudo systemctl list-units --type=service --state=running
+# or
+service --status-all</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Stop and disable dangerous services</span>
+                    <span class="command-code"># UNLESS README REQUIRES THEM!
+
+# Telnet
+sudo systemctl stop telnet.socket
+sudo systemctl disable telnet.socket
+
+# FTP (multiple variants)
+sudo systemctl stop vsftpd
+sudo systemctl disable vsftpd
+sudo systemctl stop proftpd
+sudo systemctl disable proftpd
+
+# Samba (file sharing)
+sudo systemctl stop smbd
+sudo systemctl disable smbd
+
+# NFS
+sudo systemctl stop nfs-server
+sudo systemctl disable nfs-server
+
+# NIS
+sudo systemctl stop nis
+sudo systemctl disable nis
+
+# X11 VNC
+sudo systemctl stop vncserver
+sudo systemctl disable vncserver
+
+# xinetd
+sudo systemctl stop xinetd
+sudo systemctl disable xinetd</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for listening ports</span>
+                    <span class="command-code">sudo ss -ln
+# or
+sudo netstat -tuln</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find which process is using a port</span>
+                    <span class="command-code">sudo lsof -i :PORT
+# or
+sudo ss -lntp | grep :PORT</span>
+                </div>
+            </div>
+
+            <div class="section critical" data-keywords="backdoor cron jobs malware persistence">
+                <h2>🔍 BACKDOOR DETECTION <span class="priority-badge badge-critical">CRITICAL</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Check for unauthorized cron jobs</span>
+                    <span class="command-code"># Check user crontabs
+for user in $(cut -f1 -d: /etc/passwd); do echo "=== $user ==="; sudo crontab -u $user -l 2>/dev/null; done
+
+# Check system crontabs
+ls -la /etc/cron.*
+cat /etc/crontab
+ls -la /var/spool/cron/crontabs/</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check init files for backdoors</span>
+                    <span class="command-code">ls -la /etc/init.d/
+ls -la /etc/init/
+ls -la /etc/systemd/system/</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check rc.local for malicious commands</span>
+                    <span class="command-code">cat /etc/rc.local
+
+# Should only contain:
+# #!/bin/sh -e
+# exit 0</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Deny all users from cron (except specific users if needed)</span>
+                    <span class="command-code">echo "ALL" | sudo tee /etc/cron.deny</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check for suspicious listening ports</span>
+                    <span class="command-code">sudo ss -ln | grep LISTEN
+
+# Compare to README's required services
+# Investigate unexpected ports</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find SUID/SGID files (potential backdoors)</span>
+                    <span class="command-code">sudo find / -perm -4000 -type f 2>/dev/null
+sudo find / -perm -2000 -type f 2>/dev/null</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="kernel hardening sysctl security">
+                <h2>🔧 KERNEL HARDENING - sysctl</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Edit sysctl configuration</span>
+                    <span class="command-code">sudo nano /etc/sysctl.conf
+
+# Add these security settings:
+# Filesystem protections
+fs.file-max = 65535
+fs.protected_fifos = 2
+fs.protected_regular = 2
+fs.suid_dumpable = 0
+
+# Kernel hardening
+kernel.core_uses_pid = 1
+kernel.dmesg_restrict = 1
+kernel.exec-shield = 1
+kernel.sysrq = 0
+kernel.randomize_va_space = 2
+kernel.pid_max = 65536
+
+# Network security
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.all.log_martians = 1
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.all.secure_redirects = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.conf.default.log_martians = 1
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.default.secure_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.icmp_echo_ignore_all = 1
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+net.ipv4.ip_forward = 0
+net.ipv4.tcp_syncookies = 1
+
+# Disable IPv6 (if not needed)
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Apply sysctl settings immediately</span>
+                    <span class="command-code">sudo sysctl -p</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="antivirus clamav rkhunter malware scan">
+                <h2>🛡️ ANTIVIRUS & MALWARE SCANNING</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Install security tools</span>
+                    <span class="command-code">sudo apt-get install clamav clamav-daemon chkrootkit rkhunter -y</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Update ClamAV virus definitions</span>
+                    <span class="command-code">sudo freshclam</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Run ClamAV scan</span>
+                    <span class="command-code">sudo clamscan -r --bell -i /home</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Run chkrootkit</span>
+                    <span class="command-code">sudo chkrootkit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Update and run rkhunter</span>
+                    <span class="command-code">sudo rkhunter --update
+sudo rkhunter --propupd
+sudo rkhunter -c --enable all --disable none
+
+# Check log:
+sudo cat /var/log/rkhunter.log | grep -i warning</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="media files prohibited mp3 mp4">
+                <h2>🔍 FIND PROHIBITED MEDIA FILES</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Search for media files</span>
+                    <span class="command-code">sudo find / -iname "*.mp3" 2>/dev/null
+sudo find / -iname "*.mp4" 2>/dev/null
+sudo find / -iname "*.avi" 2>/dev/null
+sudo find / -iname "*.mov" 2>/dev/null
+
+# Search for all media types:
+sudo find /home -type f \( -iname "*.mp3" -o -iname "*.mp4" -o -iname "*.avi" -o -iname "*.mov" -o -iname "*.wmv" -o -iname "*.flv" \) 2>/dev/null</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># List all files in user directories (review for suspicious content)</span>
+                    <span class="command-code">sudo ls -laR /home > /tmp/user_files.txt
+less /tmp/user_files.txt</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete prohibited file</span>
+                    <span class="command-code">sudo rm /path/to/prohibited/file.mp3</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="file permissions security chmod">
+                <h2>🔒 FILE PERMISSIONS & SECURITY</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Secure critical system files</span>
+                    <span class="command-code">sudo chmod 644 /etc/passwd
+sudo chmod 640 /etc/shadow
+sudo chmod 644 /etc/group
+sudo chmod 640 /etc/gshadow</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Secure log files</span>
+                    <span class="command-code">sudo chmod -R 444 /var/log</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Secure SSH configuration</span>
+                    <span class="command-code">sudo chmod 600 /etc/ssh/sshd_config</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find world-writable files (security risk)</span>
+                    <span class="command-code">sudo find / -xdev -type f -perm -0002 -ls 2>/dev/null</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Find files with no owner (orphaned)</span>
+                    <span class="command-code">sudo find / -xdev \( -nouser -o -nogroup \) 2>/dev/null</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="hosts network security">
+                <h2>🌐 NETWORK SECURITY</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Check /etc/hosts for malicious entries</span>
+                    <span class="command-code">cat /etc/hosts
+
+# Should only have:
+# 127.0.0.1 localhost
+# ::1 localhost ip6-localhost ip6-loopback
+
+# Remove suspicious entries redirecting domains</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Prevent IP spoofing</span>
+                    <span class="command-code">echo "nospoof on" | sudo tee -a /etc/host.conf</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Check network connections</span>
+                    <span class="command-code">sudo ss -tunapl</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>📋 LINUX CYBERPATRIOT CHECKLIST - PRIORITY ORDER</h3>
+                <ul>
+                    <li><strong>READ README</strong> - Note users, admins, required services</li>
+                    <li><strong>ANSWER FORENSICS QUESTIONS FIRST!</strong></li>
+                    <li>Lock root account (passwd -l root)</li>
+                    <li><strong>USER MANAGEMENT (15-30 pts)</strong></li>
+                    <li>Check UID 0 users (only root should have this)</li>
+                    <li>Delete unauthorized users</li>
+                    <li>Remove unauthorized sudo access</li>
+                    <li>Check /etc/sudoers for NOPASSWD entries</li>
+                    <li>Disable guest account in lightdm.conf</li>
+                    <li><strong>PASSWORD POLICY (set BEFORE changing passwords!)</strong></li>
+                    <li>Install libpam-cracklib</li>
+                    <li>Edit /etc/login.defs (PASS_MAX_DAYS, PASS_MIN_DAYS)</li>
+                    <li>Configure /etc/pam.d/common-password (complexity)</li>
+                    <li>Configure /etc/pam.d/common-auth (lockout policy)</li>
+                    <li>Change all user passwords after policy is set</li>
+                    <li><strong>FIREWALL (UFW)</strong></li>
+                    <li>Install and configure UFW</li>
+                    <li>Default deny incoming, allow outgoing</li>
+                    <li>Allow only required services</li>
+                    <li>Enable UFW and logging</li>
+                    <li><strong>SSH HARDENING</strong></li>
+                    <li>Edit /etc/ssh/sshd_config</li>
+                    <li>PermitRootLogin no, PermitEmptyPasswords no</li>
+                    <li>Protocol 2, X11Forwarding no</li>
+                    <li>Test config (sshd -t) then restart SSH</li>
+                    <li><strong>UPDATES</strong></li>
+                    <li>apt-get update && apt-get upgrade</li>
+                    <li>Enable automatic security updates</li>
+                    <li><strong>SERVICES</strong></li>
+                    <li>Stop/disable Telnet, FTP (unless required)</li>
+                    <li>Stop/disable Samba, NFS, NIS (unless required)</li>
+                    <li>Check for services with no valid purpose</li>
+                    <li><strong>BACKDOOR DETECTION</strong></li>
+                    <li>Check all user crontabs</li>
+                    <li>Check /etc/cron.*/ directories</li>
+                    <li>Check /etc/rc.local</li>
+                    <li>Find suspicious listening ports (ss -ln)</li>
+                    <li>Check init files in /etc/init.d/</li>
+                    <li><strong>KERNEL HARDENING</strong></li>
+                    <li>Configure /etc/sysctl.conf</li>
+                    <li>Apply with sysctl -p</li>
+                    <li><strong>PACKAGE MANAGEMENT</strong></li>
+                    <li>Remove hacking tools (nmap, john, wireshark)</li>
+                    <li>Remove unnecessary packages</li>
+                    <li>Verify package repositories</li>
+                    <li><strong>ANTIVIRUS</strong></li>
+                    <li>Install ClamAV, chkrootkit, rkhunter</li>
+                    <li>Update definitions and run scans</li>
+                    <li><strong>PROHIBITED CONTENT</strong></li>
+                    <li>Search for media files (mp3, mp4, etc.)</li>
+                    <li>Remove unauthorized content</li>
+                    <li><strong>FILE PERMISSIONS</strong></li>
+                    <li>Secure /etc/passwd, /etc/shadow, /etc/group</li>
+                    <li>Check for world-writable files</li>
+                    <li>Check for orphaned files</li>
+                    <li><strong>NETWORK SECURITY</strong></li>
+                    <li>Check /etc/hosts for malicious entries</li>
+                    <li>Enable IP spoof protection</li>
+                    <li>Verify scoring report is updating</li>
+                    <li><strong>DOCUMENT ALL CHANGES!</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- CISCO TAB -->
+        <div id="cisco" class="tab-content">
+            <div class="search-box">
+                <input type="text" id="searchCisco" placeholder="🔍 Search Cisco commands..." onkeyup="searchCommands('cisco')">
+            </div>
+
+            <div class="quick-ref">
+                <h3>⚡ Quick Essential Commands</h3>
+                <p><code>enable</code> → Privileged Mode | <code>configure terminal</code> → Config Mode | <code>copy running-config startup-config</code> → Save Config</p>
+            </div>
+
+            <div class="section critical" data-keywords="readme packet tracer first steps">
+                <h2>🚨 CISCO FIRST STEPS <span class="priority-badge badge-critical">CRITICAL</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># STEP 1: Read instructions in Packet Tracer carefully</span>
+                    <span class="command-code"># Check for:
+- Required hostnames
+- IP addresses to configure
+- Routing protocols (OSPF, static routes)
+- VLANs and trunk ports
+- Security requirements</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># STEP 2: Access each device and set basic security FIRST</span>
+                    <span class="command-code"># This prevents lockout and scores easy points</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="enable secret password console vty security">
+                <h2>🔐 BASIC SECURITY CONFIGURATION <span class="priority-badge badge-high">QUICK POINTS</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Set hostname</span>
+                    <span class="command-code">Router> enable
+Router# configure terminal
+Router(config)# hostname R1
+R1(config)#</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Set enable secret password (CRITICAL!)</span>
+                    <span class="command-code">R1(config)# enable secret Cisco12345
+R1(config)# service password-encryption</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure console password</span>
+                    <span class="command-code">R1(config)# line console 0
+R1(config-line)# password ConsolePass123
+R1(config-line)# login
+R1(config-line)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure VTY lines (remote access)</span>
+                    <span class="command-code">R1(config)# line vty 0 4
+R1(config-line)# password VtyPass123
+R1(config-line)# login
+R1(config-line)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Set banner MOTD (Message of the Day)</span>
+                    <span class="command-code">R1(config)# banner motd #Authorized Access Only#</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable DNS lookup (prevents command delays)</span>
+                    <span class="command-code">R1(config)# no ip domain-lookup</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># SAVE CONFIGURATION (VERY IMPORTANT!)</span>
+                    <span class="command-code">R1(config)# exit
+R1# copy running-config startup-config
+# or shortcut:
+R1# wr</span>
+                </div>
+            </div>
+
+            <div class="section high-priority" data-keywords="interface ip address no shutdown">
+                <h2>🔌 INTERFACE CONFIGURATION <span class="priority-badge badge-high">REQUIRED</span></h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Show all interfaces</span>
+                    <span class="command-code">show ip interface brief</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure interface with IP address</span>
+                    <span class="command-code">R1(config)# interface gigabitEthernet 0/0
+R1(config-if)# ip address 192.168.1.1 255.255.255.0
+R1(config-if)# description Link to LAN
+R1(config-if)# no shutdown
+R1(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure serial interface (with clock rate if DCE)</span>
+                    <span class="command-code">R1(config)# interface serial 0/0/0
+R1(config-if)# ip address 10.1.1.1 255.255.255.252
+R1(config-if)# clock rate 64000
+R1(config-if)# no shutdown
+R1(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure loopback interface</span>
+                    <span class="command-code">R1(config)# interface loopback 0
+R1(config-if)# ip address 1.1.1.1 255.255.255.255
+R1(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable unused interfaces (security)</span>
+                    <span class="command-code">R1(config)# interface range fastEthernet 0/20-24
+R1(config-if-range)# shutdown
+R1(config-if-range)# exit</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="vlan create trunk access switchport">
+                <h2>🏢 VLAN CONFIGURATION</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Create VLAN</span>
+                    <span class="command-code">Switch(config)# vlan 10
+Switch(config-vlan)# name Sales
+Switch(config-vlan)# exit
+
+Switch(config)# vlan 20
+Switch(config-vlan)# name Engineering
+Switch(config-vlan)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Assign port to VLAN (access port)</span>
+                    <span class="command-code">Switch(config)# interface fastEthernet 0/1
+Switch(config-if)# switchport mode access
+Switch(config-if)# switchport access vlan 10
+Switch(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure trunk port (carries multiple VLANs)</span>
+                    <span class="command-code">Switch(config)# interface gigabitEthernet 0/1
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport trunk allowed vlan 10,20,30
+Switch(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show VLAN information</span>
+                    <span class="command-code">Switch# show vlan brief</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Assign IP to VLAN interface (for inter-VLAN routing)</span>
+                    <span class="command-code">Switch(config)# interface vlan 10
+Switch(config-if)# ip address 192.168.10.1 255.255.255.0
+Switch(config-if)# no shutdown
+Switch(config-if)# exit</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="routing static route default gateway">
+                <h2>🗺️ STATIC ROUTING</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Add static route</span>
+                    <span class="command-code">R1(config)# ip route 192.168.2.0 255.255.255.0 10.0.0.2
+
+# Format: ip route [destination network] [subnet mask] [next-hop IP]</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Add default static route (gateway of last resort)</span>
+                    <span class="command-code">R1(config)# ip route 0.0.0.0 0.0.0.0 10.0.0.1</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show routing table</span>
+                    <span class="command-code">R1# show ip route</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete static route</span>
+                    <span class="command-code">R1(config)# no ip route 192.168.2.0 255.255.255.0 10.0.0.2</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="ospf routing protocol network area">
+                <h2>🔄 OSPF CONFIGURATION</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Enable OSPF and set router ID</span>
+                    <span class="command-code">R1(config)# router ospf 1
+R1(config-router)# router-id 1.1.1.1
+R1(config-router)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Advertise networks in OSPF area 0</span>
+                    <span class="command-code">R1(config)# router ospf 1
+R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
+R1(config-router)# network 10.0.0.0 0.0.0.3 area 0
+R1(config-router)# exit
+
+# Note: Use wildcard mask (inverse of subnet mask)
+# 255.255.255.0 -> 0.0.0.255
+# 255.255.255.252 -> 0.0.0.3</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Configure passive interface (don't send OSPF hello packets)</span>
+                    <span class="command-code">R1(config)# router ospf 1
+R1(config-router)# passive-interface gigabitEthernet 0/1
+R1(config-router)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show OSPF neighbors</span>
+                    <span class="command-code">R1# show ip ospf neighbor</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show OSPF configuration</span>
+                    <span class="command-code">R1# show ip protocols</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Clear OSPF process (resets OSPF)</span>
+                    <span class="command-code">R1# clear ip ospf process</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="acl access list security filter permit deny">
+                <h2>🛡️ ACCESS CONTROL LISTS (ACLs)</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Create standard ACL (filters by source IP only)</span>
+                    <span class="command-code">R1(config)# access-list 10 permit 192.168.1.0 0.0.0.255
+R1(config)# access-list 10 deny any</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Apply ACL to interface</span>
+                    <span class="command-code">R1(config)# interface gigabitEthernet 0/0
+R1(config-if)# ip access-group 10 in
+R1(config-if)# exit
+
+# in = inbound traffic
+# out = outbound traffic</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Create extended ACL (filters by source, destination, protocol, port)</span>
+                    <span class="command-code">R1(config)# access-list 100 permit tcp 192.168.1.0 0.0.0.255 any eq 80
+R1(config)# access-list 100 permit tcp 192.168.1.0 0.0.0.255 any eq 443
+R1(config)# access-list 100 deny ip any any</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Named ACL (easier to manage)</span>
+                    <span class="command-code">R1(config)# ip access-list extended BLOCK_TELNET
+R1(config-ext-nacl)# deny tcp any any eq 23
+R1(config-ext-nacl)# permit ip any any
+R1(config-ext-nacl)# exit
+
+R1(config)# interface gigabitEthernet 0/1
+R1(config-if)# ip access-group BLOCK_TELNET out
+R1(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show ACLs</span>
+                    <span class="command-code">R1# show access-lists
+R1# show ip access-lists</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Remove ACL from interface</span>
+                    <span class="command-code">R1(config)# interface gigabitEthernet 0/0
+R1(config-if)# no ip access-group 10 in
+R1(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Delete ACL</span>
+                    <span class="command-code">R1(config)# no access-list 10</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="ssh secure remote access crypto key">
+                <h2>🔐 SSH CONFIGURATION</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Configure SSH (secure remote access)</span>
+                    <span class="command-code">R1(config)# ip domain-name cyberpatriot.local
+R1(config)# crypto key generate rsa
+# Choose key size: 1024 or 2048
+
+R1(config)# username admin privilege 15 secret AdminPass123
+
+R1(config)# line vty 0 4
+R1(config-line)# transport input ssh
+R1(config-line)# login local
+R1(config-line)# exit
+
+R1(config)# ip ssh version 2</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Verify SSH configuration</span>
+                    <span class="command-code">R1# show ip ssh
+R1# show ssh</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Disable Telnet (force SSH only)</span>
+                    <span class="command-code">R1(config)# line vty 0 4
+R1(config-line)# transport input ssh
+R1(config-line)# exit</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="dhcp pool network gateway dns">
+                <h2>📡 DHCP CONFIGURATION</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Configure DHCP pool</span>
+                    <span class="command-code">R1(config)# ip dhcp pool SALES_POOL
+R1(dhcp-config)# network 192.168.10.0 255.255.255.0
+R1(dhcp-config)# default-router 192.168.10.1
+R1(dhcp-config)# dns-server 8.8.8.8 8.8.4.4
+R1(dhcp-config)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Exclude addresses from DHCP (reserve for servers/routers)</span>
+                    <span class="command-code">R1(config)# ip dhcp excluded-address 192.168.10.1 192.168.10.10</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show DHCP bindings</span>
+                    <span class="command-code">R1# show ip dhcp binding</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show DHCP pool</span>
+                    <span class="command-code">R1# show ip dhcp pool</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="port security mac address switch">
+                <h2>🔒 PORT SECURITY</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Enable port security (prevents MAC flooding)</span>
+                    <span class="command-code">Switch(config)# interface fastEthernet 0/1
+Switch(config-if)# switchport mode access
+Switch(config-if)# switchport port-security
+Switch(config-if)# switchport port-security maximum 2
+Switch(config-if)# switchport port-security violation shutdown
+Switch(config-if)# switchport port-security mac-address sticky
+Switch(config-if)# exit</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Port security violation modes:</span>
+                    <span class="command-code"># protect - drops packets from unknown MACs
+# restrict - drops packets and increments violation counter
+# shutdown - disables port (default, most secure)</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show port security</span>
+                    <span class="command-code">Switch# show port-security
+Switch# show port-security interface fastEthernet 0/1</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Re-enable port after security violation</span>
+                    <span class="command-code">Switch(config)# interface fastEthernet 0/1
+Switch(config-if)# shutdown
+Switch(config-if)# no shutdown
+Switch(config-if)# exit</span>
+                </div>
+            </div>
+
+            <div class="section" data-keywords="show commands verify debug troubleshoot">
+                <h2>🔍 VERIFICATION & TROUBLESHOOTING</h2>
+                
+                <div class="command">
+                    <span class="command-comment"># Show running configuration</span>
+                    <span class="command-code">show running-config</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show startup configuration</span>
+                    <span class="command-code">show startup-config</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show interface status</span>
+                    <span class="command-code">show ip interface brief</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show routing table</span>
+                    <span class="command-code">show ip route</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show VLANs</span>
+                    <span class="command-code">show vlan brief</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show MAC address table</span>
+                    <span class="command-code">show mac address-table</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Test connectivity</span>
+                    <span class="command-code">ping 192.168.1.1
+traceroute 192.168.1.1</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show interface details</span>
+                    <span class="command-code">show interface gigabitEthernet 0/0</span>
+                </div>
+
+                <div class="command">
+                    <span class="command-comment"># Show protocols running</span>
+                    <span class="command-code">show ip protocols</span>
+                </div>
+            </div>
+
+            <div class="checklist">
+                <h3>📋 CISCO CYBERPATRIOT CHECKLIST</h3>
+                <ul>
+                    <li><strong>READ PACKET TRACER INSTRUCTIONS</strong> - Note requirements!</li>
+                    <li><strong>BASIC SECURITY (do FIRST on all devices)</strong></li>
+                    <li>Set hostname</li>
+                    <li>Set enable secret password</li>
+                    <li>Configure console password</li>
+                    <li>Configure VTY line passwords</li>
+                    <li>Set banner MOTD</li>
+                    <li>Enable service password-encryption</li>
+                    <li>Disable ip domain-lookup</li>
+                    <li><strong>INTERFACE CONFIGURATION</strong></li>
+                    <li>Configure all interface IP addresses per diagram</li>
+                    <li>Add interface descriptions</li>
+                    <li>Bring all required interfaces up (no shutdown)</li>
+                    <li>Set clock rate on DCE serial interfaces</li>
+                    <li>Disable unused ports (shutdown)</li>
+                    <li><strong>VLAN CONFIGURATION (switches)</strong></li>
+                    <li>Create required VLANs with names</li>
+                    <li>Assign ports to correct VLANs (switchport access vlan)</li>
+                    <li>Configure trunk ports (switchport mode trunk)</li>
+                    <li>Verify VLAN assignments (show vlan brief)</li>
+                    <li><strong>ROUTING</strong></li>
+                    <li>Configure static routes if required</li>
+                    <li>Configure default routes if required</li>
+                    <li>Or configure OSPF:</li>
+                    <li>Enable OSPF with process ID</li>
+                    <li>Set router ID</li>
+                    <li>Advertise networks in correct areas</li>
+                    <li>Configure passive interfaces</li>
+                    <li>Verify OSPF neighbors</li>
+                    <li><strong>DHCP (if required)</strong></li>
+                    <li>Configure DHCP pools</li>
+                    <li>Set default gateway and DNS servers</li>
+                    <li>Exclude reserved addresses</li>
+                    <li><strong>ACCESS CONTROL LISTS (if required)</strong></li>
+                    <li>Create ACLs per requirements</li>
+                    <li>Apply ACLs to correct interfaces/directions</li>
+                    <li>Verify with show access-lists</li>
+                    <li><strong>PORT SECURITY (if required)</strong></li>
+                    <li>Enable port security on access ports</li>
+                    <li>Set maximum MAC addresses</li>
+                    <li>Configure violation action</li>
+                    <li>Use sticky MAC learning</li>
+                    <li><strong>SSH CONFIGURATION (if required)</strong></li>
+                    <li>Set domain name</li>
+                    <li>Generate RSA keys</li>
+                    <li>Create username with privilege 15</li>
+                    <li>Configure VTY for SSH only</li>
+                    <li>Set SSH version 2</li>
+                    <li><strong>VERIFICATION</strong></li>
+                    <li>Verify all interface IPs (show ip interface brief)</li>
+                    <li>Verify routing table (show ip route)</li>
+                    <li>Test connectivity with ping</li>
+                    <li>Verify OSPF/EIGRP neighbors if used</li>
+                    <li>Verify VLANs (show vlan brief)</li>
+                    <li><strong>SAVE CONFIGURATION!</strong></li>
+                    <li>copy running-config startup-config (on ALL devices!)</li>
+                    <li>Or use shortcut: wr</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>🛡️ Hawaii Baptist Academy CyberPatriot Team 🛡️</h3>
+            <p><strong>Location:</strong> Pearl City, Hawaii</p>
+            <p>Defending Networks • Building Character • Serving Christ</p>
+            <div class="motto">"Be strong and courageous." - Joshua 1:9</div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+
+            // Remove active class from all buttons
+            const tabButtons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove('active');
+            }
+
+            // Show the selected tab and mark button as active
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function searchCommands(tab) {
+            const searchInput = document.getElementById('search' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            const filter = searchInput.value.toLowerCase();
+            const tabContent = document.getElementById(tab);
+            const sections = tabContent.getElementsByClassName('section');
+
+            for (let i = 0; i < sections.length; i++) {
+                const section = sections[i];
+                const keywords = section.getAttribute('data-keywords') || '';
+                const textContent = section.textContent || section.innerText;
+                
+                if (textContent.toLowerCase().indexOf(filter) > -1 || keywords.toLowerCase().indexOf(filter) > -1) {
+                    section.style.display = '';
+                } else {
+                    section.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
