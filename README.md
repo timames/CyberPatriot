@@ -2,15 +2,9 @@
 
 <div align="center">
 
-![CyberPatriot](https://img.shields.io/badge/CyberPatriot-Competition-blue?style=for-the-badge)
-![Hawaii Baptist Academy](https://img.shields.io/badge/Hawaii_Baptist_Academy-Team-gold?style=for-the-badge)
-![License](https://img.shields.io/badge/License-Educational-green?style=for-the-badge)
-
 **Comprehensive reference guide and resources for AFA CyberPatriot competitions**
 
 *Developed by Hawaii Baptist Academy CyberPatriot Team*
-
-[📖 Documentation](#documentation) • [🚀 Quick Start](#quick-start) • [⚡ Features](#features) • [📋 Checklists](#competition-checklists) • [🤝 Contributing](#contributing)
 
 </div>
 
