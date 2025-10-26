@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBA CyberPatriot - Hardening Scripts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(15, 18, 25, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #001f3f 100%);
+            padding: 50px 40px;
+            text-align: center;
+            border-bottom: 4px solid #FFD700;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #FFD700;
+        }
+
+        .header .shield {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .header .school-name {
+            color: #FFD700;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .tagline {
+            font-size: 1.1rem;
+            color: #b0b0b0;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        .header .location {
+            color: #FFD700;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .featured-box {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
+            border: 2px solid #FFD700;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .featured-box h2 {
+            color: #FFD700;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .featured-box p {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .featured-button {
+            display: inline-block;
+            padding: 18px 40px;
+            background: #FFD700;
+            color: #001f3f;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .featured-button:hover {
+            background: #ffc400;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #FFD700;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #FFD700;
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section p {
+            margin-bottom: 15px;
+            color: #b0b0b0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: rgba(0, 31, 63, 0.5);
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 4px solid #FFD700;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(0, 51, 102, 0.5);
+            border-left-width: 6px;
+            transform: translateX(5px);
+        }
+
+        .feature-card h3 {
+            color: #FFD700;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+        }
+
+        .feature-card p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #FFD700;
+        }
+
+        .button:hover {
+            background: #FFD700;
+            color: #001f3f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+
+        .warning {
+            background: rgba(42, 42, 62, 0.5);
+            border-left: 4px solid #ff6b6b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning strong {
+            color: #ff6b6b;
+        }
+
+        .footer {
+            background: rgba(0, 31, 63, 0.8);
+            padding: 30px;
+            text-align: center;
+            color: #b0b0b0;
+            border-top: 4px solid #FFD700;
+        }
+
+        .footer h3 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer .motto {
+            color: #FFD700;
+            font-style: italic;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        .footer a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        code {
+            background: rgba(0, 31, 63, 0.5);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: #FFD700;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="shield">🛡️</div>
+            <div class="school-name">HAWAII BAPTIST ACADEMY</div>
+            <h1>CyberPatriot Team</h1>
+            <div class="location">📍 Honolulu, Hawaii</div>
+            <div class="tagline">Defending Networks • Building Character • Serving Christ</div>
+        </div>
+
+        <div class="content">
+            <!-- Featured Reference Guide -->
+            <div class="featured-box">
+                <h2>📚 Competition Reference Guide</h2>
+                <p>Complete Windows, Linux, and Cisco command reference for CyberPatriot competitions</p>
+                <a href="HBA_CyberPatriot_Reference_Guide.html" class="featured-button">Open Reference Guide →</a>
+            </div>
+
+            <div class="section">
+                <h2>About This Repository</h2>
+                <p>
+                    This repository contains system hardening and security automation scripts developed by the 
+                    Hawaii Baptist Academy CyberPatriot team. These resources help teams quickly identify 
+                    vulnerabilities, apply security configurations, and improve their system security posture 
+                    during competitions.
+                </p>
+            </div>
+
+            <div class="section">
+                <h2>Repository Features</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>⚡ Quick Deployment</h3>
+                        <p>Fast and efficient scripts designed to secure systems during competition time constraints.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔍 Vulnerability Scanning</h3>
+                        <p>Automated checks for common security misconfigurations and weaknesses.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔧 System Hardening</h3>
+                        <p>Comprehensive hardening routines for Windows and Linux systems.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📋 Compliance Checks</h3>
+                        <p>Verify systems meet CyberPatriot scoring engine requirements.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🌐 Cisco Configuration</h3>
+                        <p>Complete Cisco router and switch security configuration commands.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>📖 Reference Materials</h3>
+                        <p>Searchable command reference guide for Windows, Linux, and Cisco devices.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Getting Started</h2>
+                <p>
+                    Clone this repository and review the scripts before use. Each script is designed to be 
+                    run with appropriate privileges and should be tested in a safe environment first.
+                </p>
+                <div class="warning">
+                    <strong>⚠️ Important:</strong> Always understand what a script does before running it. 
+                    These scripts modify system configurations and should only be used in authorized 
+                    competition or training environments.
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Resources</h2>
+                <div class="button-group">
+                    <a href="HBA_CyberPatriot_Reference_Guide.html" class="button">📚 Reference Guide</a>
+                    <a href="https://github.com/timames/CyberPatriot" class="button">💻 GitHub Repository</a>
+                    <a href="https://github.com/timames/CyberPatriot#readme" class="button">📄 Documentation</a>
+                    <a href="https://github.com/timames/CyberPatriot/issues" class="button">🐛 Report Issue</a>
+                    <a href="https://www.uscyberpatriot.org/" class="button">🏆 CyberPatriot Official</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>🛡️ Hawaii Baptist Academy CyberPatriot Team 🛡️</h3>
+            <p><strong>Location:</strong> Honolulu, Hawaii</p>
+            <p>Defending Networks • Building Character • Serving Christ</p>
+            <div class="motto">"Be strong and courageous." - Joshua 1:9</div>
+            <p style="margin-top: 20px;">
+                <a href="https://github.com/timames">@timames</a> | 
+                <a href="https://github.com/timames/CyberPatriot">GitHub Repository</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
